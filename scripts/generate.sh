@@ -26,6 +26,11 @@ function postGenerateTidy() {
   sed -i '' -e '/this.Type = type_/d' ./*.go
   sed -i '' -e 's/type_ string//g' ./*.go
   sed -i '' -e 's/, type_ string//g' ./*.go
+
+  # Remove non-client related files
+  rm -rf docs
+  rm -rf api
+  rm -rf .openapi-generator
 }
 
 cleanExisting
