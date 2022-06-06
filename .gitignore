@@ -1,0 +1,7 @@
+# Directories
+docs
+api
+.openapi-generator
+
+# Files
+.travis.yml
