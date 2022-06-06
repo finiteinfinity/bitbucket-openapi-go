@@ -5,3 +5,4 @@ api
 
 # Files
 .travis.yml
+git_push.sh
