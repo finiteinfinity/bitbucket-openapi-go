@@ -23,7 +23,10 @@ type AccountLinks struct {
 	Followers *Link `json:"followers,omitempty"`
 	Following *Link `json:"following,omitempty"`
 	Repositories *Link `json:"repositories,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccountLinks AccountLinks
 
 // NewAccountLinks instantiates a new AccountLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -254,7 +257,34 @@ func (o AccountLinks) MarshalJSON() ([]byte, error) {
 	if o.Repositories != nil {
 		toSerialize["repositories"] = o.Repositories
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *AccountLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varAccountLinks := _AccountLinks{}
+
+	if err = json.Unmarshal(bytes, &varAccountLinks); err == nil {
+		*o = AccountLinks(varAccountLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "avatar")
+		delete(additionalProperties, "followers")
+		delete(additionalProperties, "following")
+		delete(additionalProperties, "repositories")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccountLinks struct {

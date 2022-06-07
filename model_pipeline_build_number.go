@@ -19,7 +19,10 @@ import (
 type PipelineBuildNumber struct {
 	// The next number that will be used as build number.
 	Next *int32 `json:"next,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineBuildNumber PipelineBuildNumber
 
 // NewPipelineBuildNumber instantiates a new PipelineBuildNumber object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineBuildNumber) MarshalJSON() ([]byte, error) {
 	if o.Next != nil {
 		toSerialize["next"] = o.Next
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineBuildNumber) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineBuildNumber := _PipelineBuildNumber{}
+
+	if err = json.Unmarshal(bytes, &varPipelineBuildNumber); err == nil {
+		*o = PipelineBuildNumber(varPipelineBuildNumber)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "next")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineBuildNumber struct {

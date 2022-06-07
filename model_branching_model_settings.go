@@ -21,7 +21,10 @@ type BranchingModelSettings struct {
 	BranchTypes []BranchingModelSettingsBranchTypes `json:"branch_types,omitempty"`
 	Development *BranchingModelSettingsDevelopment `json:"development,omitempty"`
 	Production *BranchingModelSettingsProduction `json:"production,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelSettings BranchingModelSettings
 
 // NewBranchingModelSettings instantiates a new BranchingModelSettings object
 // This constructor will assign default values to properties that have it defined,
@@ -182,7 +185,32 @@ func (o BranchingModelSettings) MarshalJSON() ([]byte, error) {
 	if o.Production != nil {
 		toSerialize["production"] = o.Production
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelSettings) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelSettings := _BranchingModelSettings{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelSettings); err == nil {
+		*o = BranchingModelSettings(varBranchingModelSettings)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "branch_types")
+		delete(additionalProperties, "development")
+		delete(additionalProperties, "production")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelSettings struct {

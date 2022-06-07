@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineSshPublicKey struct for PipelineSshPublicKey
@@ -26,7 +28,10 @@ type PipelineSshPublicKey struct {
 	Md5Fingerprint *string `json:"md5_fingerprint,omitempty"`
 	// The SHA-256 fingerprint of the public key.
 	Sha256Fingerprint *string `json:"sha256_fingerprint,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineSshPublicKey PipelineSshPublicKey
 
 // NewPipelineSshPublicKey instantiates a new PipelineSshPublicKey object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +200,79 @@ func (o PipelineSshPublicKey) MarshalJSON() ([]byte, error) {
 	if o.Sha256Fingerprint != nil {
 		toSerialize["sha256_fingerprint"] = o.Sha256Fingerprint
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineSshPublicKey) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineSshPublicKeyWithoutEmbeddedStruct struct {
+		// The type of the public key.
+		KeyType *string `json:"key_type,omitempty"`
+		// The base64 encoded public key.
+		Key *string `json:"key,omitempty"`
+		// The MD5 fingerprint of the public key.
+		Md5Fingerprint *string `json:"md5_fingerprint,omitempty"`
+		// The SHA-256 fingerprint of the public key.
+		Sha256Fingerprint *string `json:"sha256_fingerprint,omitempty"`
+	}
+
+	varPipelineSshPublicKeyWithoutEmbeddedStruct := PipelineSshPublicKeyWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineSshPublicKeyWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineSshPublicKey := _PipelineSshPublicKey{}
+		varPipelineSshPublicKey.KeyType = varPipelineSshPublicKeyWithoutEmbeddedStruct.KeyType
+		varPipelineSshPublicKey.Key = varPipelineSshPublicKeyWithoutEmbeddedStruct.Key
+		varPipelineSshPublicKey.Md5Fingerprint = varPipelineSshPublicKeyWithoutEmbeddedStruct.Md5Fingerprint
+		varPipelineSshPublicKey.Sha256Fingerprint = varPipelineSshPublicKeyWithoutEmbeddedStruct.Sha256Fingerprint
+		*o = PipelineSshPublicKey(varPipelineSshPublicKey)
+	} else {
+		return err
+	}
+
+	varPipelineSshPublicKey := _PipelineSshPublicKey{}
+
+	err = json.Unmarshal(bytes, &varPipelineSshPublicKey)
+	if err == nil {
+		o.Object = varPipelineSshPublicKey.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "key_type")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "md5_fingerprint")
+		delete(additionalProperties, "sha256_fingerprint")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineSshPublicKey struct {

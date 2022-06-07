@@ -20,7 +20,10 @@ type RenderedPullRequestMarkup struct {
 	Title *RenderedPullRequestMarkupTitle `json:"title,omitempty"`
 	Description *RenderedPullRequestMarkupTitle `json:"description,omitempty"`
 	Reason *RenderedPullRequestMarkupTitle `json:"reason,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RenderedPullRequestMarkup RenderedPullRequestMarkup
 
 // NewRenderedPullRequestMarkup instantiates a new RenderedPullRequestMarkup object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o RenderedPullRequestMarkup) MarshalJSON() ([]byte, error) {
 	if o.Reason != nil {
 		toSerialize["reason"] = o.Reason
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RenderedPullRequestMarkup) UnmarshalJSON(bytes []byte) (err error) {
+	varRenderedPullRequestMarkup := _RenderedPullRequestMarkup{}
+
+	if err = json.Unmarshal(bytes, &varRenderedPullRequestMarkup); err == nil {
+		*o = RenderedPullRequestMarkup(varRenderedPullRequestMarkup)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "reason")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRenderedPullRequestMarkup struct {

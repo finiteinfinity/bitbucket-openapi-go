@@ -20,7 +20,10 @@ type SubjectTypes struct {
 	Repository *SubjectTypesRepository `json:"repository,omitempty"`
 	User *SubjectTypesRepository `json:"user,omitempty"`
 	Team *SubjectTypesRepository `json:"team,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SubjectTypes SubjectTypes
 
 // NewSubjectTypes instantiates a new SubjectTypes object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o SubjectTypes) MarshalJSON() ([]byte, error) {
 	if o.Team != nil {
 		toSerialize["team"] = o.Team
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SubjectTypes) UnmarshalJSON(bytes []byte) (err error) {
+	varSubjectTypes := _SubjectTypes{}
+
+	if err = json.Unmarshal(bytes, &varSubjectTypes); err == nil {
+		*o = SubjectTypes(varSubjectTypes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "team")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSubjectTypes struct {

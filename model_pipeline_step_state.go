@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStepState struct for PipelineStepState
 type PipelineStepState struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepState PipelineStepState
 
 // NewPipelineStepState instantiates a new PipelineStepState object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineStepState) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepState) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStepStateWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineStepStateWithoutEmbeddedStruct := PipelineStepStateWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepStateWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStepState := _PipelineStepState{}
+		*o = PipelineStepState(varPipelineStepState)
+	} else {
+		return err
+	}
+
+	varPipelineStepState := _PipelineStepState{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepState)
+	if err == nil {
+		o.Object = varPipelineStepState.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepState struct {

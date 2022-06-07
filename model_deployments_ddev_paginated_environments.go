@@ -29,7 +29,10 @@ type DeploymentsDdevPaginatedEnvironments struct {
 	Next *string `json:"next,omitempty"`
 	// Link to previous page if it exists. A collections first page does not have this value. This is an optional element that is not provided in all responses. Some result sets strictly support forward navigation and never provide previous links. Clients must anticipate that backwards navigation is not always available. Use this link to navigate the result set and refrain from constructing your own URLs.
 	Previous *string `json:"previous,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentsDdevPaginatedEnvironments DeploymentsDdevPaginatedEnvironments
 
 // NewDeploymentsDdevPaginatedEnvironments instantiates a new DeploymentsDdevPaginatedEnvironments object
 // This constructor will assign default values to properties that have it defined,
@@ -260,7 +263,34 @@ func (o DeploymentsDdevPaginatedEnvironments) MarshalJSON() ([]byte, error) {
 	if o.Previous != nil {
 		toSerialize["previous"] = o.Previous
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentsDdevPaginatedEnvironments) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentsDdevPaginatedEnvironments := _DeploymentsDdevPaginatedEnvironments{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentsDdevPaginatedEnvironments); err == nil {
+		*o = DeploymentsDdevPaginatedEnvironments(varDeploymentsDdevPaginatedEnvironments)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "page")
+		delete(additionalProperties, "values")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "pagelen")
+		delete(additionalProperties, "next")
+		delete(additionalProperties, "previous")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentsDdevPaginatedEnvironments struct {

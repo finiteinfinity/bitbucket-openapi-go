@@ -18,7 +18,10 @@ import (
 // PullRequestCommit struct for PullRequestCommit
 type PullRequestCommit struct {
 	Hash *string `json:"hash,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullRequestCommit PullRequestCommit
 
 // NewPullRequestCommit instantiates a new PullRequestCommit object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o PullRequestCommit) MarshalJSON() ([]byte, error) {
 	if o.Hash != nil {
 		toSerialize["hash"] = o.Hash
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullRequestCommit) UnmarshalJSON(bytes []byte) (err error) {
+	varPullRequestCommit := _PullRequestCommit{}
+
+	if err = json.Unmarshal(bytes, &varPullRequestCommit); err == nil {
+		*o = PullRequestCommit(varPullRequestCommit)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "hash")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullRequestCommit struct {

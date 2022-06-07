@@ -21,7 +21,10 @@ type Branch struct {
 	MergeStrategies []string `json:"merge_strategies,omitempty"`
 	// The default merge strategy for pull requests targeting this branch.
 	DefaultMergeStrategy *string `json:"default_merge_strategy,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Branch Branch
 
 // NewBranch instantiates a new Branch object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o Branch) MarshalJSON() ([]byte, error) {
 	if o.DefaultMergeStrategy != nil {
 		toSerialize["default_merge_strategy"] = o.DefaultMergeStrategy
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Branch) UnmarshalJSON(bytes []byte) (err error) {
+	varBranch := _Branch{}
+
+	if err = json.Unmarshal(bytes, &varBranch); err == nil {
+		*o = Branch(varBranch)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "merge_strategies")
+		delete(additionalProperties, "default_merge_strategy")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranch struct {

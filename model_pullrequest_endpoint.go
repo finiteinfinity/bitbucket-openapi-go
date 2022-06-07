@@ -20,7 +20,10 @@ type PullrequestEndpoint struct {
 	Repository *Repository `json:"repository,omitempty"`
 	Branch *PullRequestBranch `json:"branch,omitempty"`
 	Commit *PullRequestCommit `json:"commit,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullrequestEndpoint PullrequestEndpoint
 
 // NewPullrequestEndpoint instantiates a new PullrequestEndpoint object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o PullrequestEndpoint) MarshalJSON() ([]byte, error) {
 	if o.Commit != nil {
 		toSerialize["commit"] = o.Commit
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullrequestEndpoint) UnmarshalJSON(bytes []byte) (err error) {
+	varPullrequestEndpoint := _PullrequestEndpoint{}
+
+	if err = json.Unmarshal(bytes, &varPullrequestEndpoint); err == nil {
+		*o = PullrequestEndpoint(varPullrequestEndpoint)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "branch")
+		delete(additionalProperties, "commit")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullrequestEndpoint struct {

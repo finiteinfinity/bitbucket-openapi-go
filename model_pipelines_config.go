@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelinesConfig struct for PipelinesConfig
@@ -21,7 +23,10 @@ type PipelinesConfig struct {
 	// Whether Pipelines is enabled for the repository.
 	Enabled *bool `json:"enabled,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelinesConfig PipelinesConfig
 
 // NewPipelinesConfig instantiates a new PipelinesConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +125,70 @@ func (o PipelinesConfig) MarshalJSON() ([]byte, error) {
 	if o.Repository != nil {
 		toSerialize["repository"] = o.Repository
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelinesConfig) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelinesConfigWithoutEmbeddedStruct struct {
+		// Whether Pipelines is enabled for the repository.
+		Enabled *bool `json:"enabled,omitempty"`
+		Repository *Repository `json:"repository,omitempty"`
+	}
+
+	varPipelinesConfigWithoutEmbeddedStruct := PipelinesConfigWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelinesConfigWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelinesConfig := _PipelinesConfig{}
+		varPipelinesConfig.Enabled = varPipelinesConfigWithoutEmbeddedStruct.Enabled
+		varPipelinesConfig.Repository = varPipelinesConfigWithoutEmbeddedStruct.Repository
+		*o = PipelinesConfig(varPipelinesConfig)
+	} else {
+		return err
+	}
+
+	varPipelinesConfig := _PipelinesConfig{}
+
+	err = json.Unmarshal(bytes, &varPipelinesConfig)
+	if err == nil {
+		o.Object = varPipelinesConfig.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "repository")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelinesConfig struct {

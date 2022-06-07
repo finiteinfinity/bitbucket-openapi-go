@@ -28,7 +28,10 @@ type IssueJobStatus struct {
 	Count *int32 `json:"count,omitempty"`
 	// The percentage of issues already imported/exported
 	Pct *float32 `json:"pct,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueJobStatus IssueJobStatus
 
 // NewIssueJobStatus instantiates a new IssueJobStatus object
 // This constructor will assign default values to properties that have it defined,
@@ -259,7 +262,34 @@ func (o IssueJobStatus) MarshalJSON() ([]byte, error) {
 	if o.Pct != nil {
 		toSerialize["pct"] = o.Pct
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueJobStatus) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueJobStatus := _IssueJobStatus{}
+
+	if err = json.Unmarshal(bytes, &varIssueJobStatus); err == nil {
+		*o = IssueJobStatus(varIssueJobStatus)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "phase")
+		delete(additionalProperties, "total")
+		delete(additionalProperties, "count")
+		delete(additionalProperties, "pct")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueJobStatus struct {

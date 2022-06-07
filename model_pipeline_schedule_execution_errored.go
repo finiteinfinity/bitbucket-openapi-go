@@ -13,13 +13,18 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineScheduleExecutionErrored struct for PipelineScheduleExecutionErrored
 type PipelineScheduleExecutionErrored struct {
 	PipelineScheduleExecution
 	Error *PipelineError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineScheduleExecutionErrored PipelineScheduleExecutionErrored
 
 // NewPipelineScheduleExecutionErrored instantiates a new PipelineScheduleExecutionErrored object
 // This constructor will assign default values to properties that have it defined,
@@ -83,7 +88,66 @@ func (o PipelineScheduleExecutionErrored) MarshalJSON() ([]byte, error) {
 	if o.Error != nil {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineScheduleExecutionErrored) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineScheduleExecutionErroredWithoutEmbeddedStruct struct {
+		Error *PipelineError `json:"error,omitempty"`
+	}
+
+	varPipelineScheduleExecutionErroredWithoutEmbeddedStruct := PipelineScheduleExecutionErroredWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecutionErroredWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineScheduleExecutionErrored := _PipelineScheduleExecutionErrored{}
+		varPipelineScheduleExecutionErrored.Error = varPipelineScheduleExecutionErroredWithoutEmbeddedStruct.Error
+		*o = PipelineScheduleExecutionErrored(varPipelineScheduleExecutionErrored)
+	} else {
+		return err
+	}
+
+	varPipelineScheduleExecutionErrored := _PipelineScheduleExecutionErrored{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecutionErrored)
+	if err == nil {
+		o.PipelineScheduleExecution = varPipelineScheduleExecutionErrored.PipelineScheduleExecution
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+
+		// remove fields from embedded structs
+		reflectPipelineScheduleExecution := reflect.ValueOf(o.PipelineScheduleExecution)
+		for i := 0; i < reflectPipelineScheduleExecution.Type().NumField(); i++ {
+			t := reflectPipelineScheduleExecution.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineScheduleExecutionErrored struct {

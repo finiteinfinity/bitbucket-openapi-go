@@ -20,7 +20,10 @@ type PipelineCompletedError struct {
 	// The name of the result (ERROR)
 	Name *string `json:"name,omitempty"`
 	Error *PipelineError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineCompletedError PipelineCompletedError
 
 // NewPipelineCompletedError instantiates a new PipelineCompletedError object
 // This constructor will assign default values to properties that have it defined,
@@ -111,7 +114,30 @@ func (o PipelineCompletedError) MarshalJSON() ([]byte, error) {
 	if o.Error != nil {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineCompletedError) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineCompletedError := _PipelineCompletedError{}
+
+	if err = json.Unmarshal(bytes, &varPipelineCompletedError); err == nil {
+		*o = PipelineCompletedError(varPipelineCompletedError)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineCompletedError struct {

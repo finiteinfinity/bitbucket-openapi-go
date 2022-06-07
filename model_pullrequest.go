@@ -14,6 +14,8 @@ package bitbucket
 import (
 	"encoding/json"
 	"time"
+	"reflect"
+	"strings"
 )
 
 // Pullrequest struct for Pullrequest
@@ -49,7 +51,10 @@ type Pullrequest struct {
 	Reviewers []Account `json:"reviewers,omitempty"`
 	//         The list of users that are collaborating on this pull request.         Collaborators are user that:          * are added to the pull request as a reviewer (part of the reviewers           list)         * are not explicit reviewers, but have commented on the pull request         * are not explicit reviewers, but have approved the pull request          Each user is wrapped in an object that indicates the user's role and         whether they have approved the pull request. For performance reasons,         the API only returns this list when an API requests a pull request by         id.         
 	Participants []Participant `json:"participants,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Pullrequest Pullrequest
 
 // NewPullrequest instantiates a new Pullrequest object
 // This constructor will assign default values to properties that have it defined,
@@ -743,7 +748,131 @@ func (o Pullrequest) MarshalJSON() ([]byte, error) {
 	if o.Participants != nil {
 		toSerialize["participants"] = o.Participants
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Pullrequest) UnmarshalJSON(bytes []byte) (err error) {
+	type PullrequestWithoutEmbeddedStruct struct {
+		Links *PullRequestLinks `json:"links,omitempty"`
+		// The pull request's unique ID. Note that pull request IDs are only unique within their associated repository.
+		Id *int32 `json:"id,omitempty"`
+		// Title of the pull request.
+		Title *string `json:"title,omitempty"`
+		Rendered *RenderedPullRequestMarkup `json:"rendered,omitempty"`
+		Summary *RenderedPullRequestMarkupTitle `json:"summary,omitempty"`
+		// The pull request's current status.
+		State *string `json:"state,omitempty"`
+		Author *Account `json:"author,omitempty"`
+		Source *PullrequestEndpoint `json:"source,omitempty"`
+		Destination *PullrequestEndpoint `json:"destination,omitempty"`
+		MergeCommit *PullRequestCommit `json:"merge_commit,omitempty"`
+		// The number of comments for a specific pull request.
+		CommentCount *int32 `json:"comment_count,omitempty"`
+		// The number of open tasks for a specific pull request.
+		TaskCount *int32 `json:"task_count,omitempty"`
+		// A boolean flag indicating if merging the pull request closes the source branch.
+		CloseSourceBranch *bool `json:"close_source_branch,omitempty"`
+		ClosedBy *Account `json:"closed_by,omitempty"`
+		// Explains why a pull request was declined. This field is only applicable to pull requests in rejected state.
+		Reason *string `json:"reason,omitempty"`
+		// The ISO8601 timestamp the request was created.
+		CreatedOn *time.Time `json:"created_on,omitempty"`
+		// The ISO8601 timestamp the request was last updated.
+		UpdatedOn *time.Time `json:"updated_on,omitempty"`
+		// The list of users that were added as reviewers on this pull request when it was created. For performance reasons, the API only includes this list on a pull request's `self` URL.
+		Reviewers []Account `json:"reviewers,omitempty"`
+		//         The list of users that are collaborating on this pull request.         Collaborators are user that:          * are added to the pull request as a reviewer (part of the reviewers           list)         * are not explicit reviewers, but have commented on the pull request         * are not explicit reviewers, but have approved the pull request          Each user is wrapped in an object that indicates the user's role and         whether they have approved the pull request. For performance reasons,         the API only returns this list when an API requests a pull request by         id.         
+		Participants []Participant `json:"participants,omitempty"`
+	}
+
+	varPullrequestWithoutEmbeddedStruct := PullrequestWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPullrequestWithoutEmbeddedStruct)
+	if err == nil {
+		varPullrequest := _Pullrequest{}
+		varPullrequest.Links = varPullrequestWithoutEmbeddedStruct.Links
+		varPullrequest.Id = varPullrequestWithoutEmbeddedStruct.Id
+		varPullrequest.Title = varPullrequestWithoutEmbeddedStruct.Title
+		varPullrequest.Rendered = varPullrequestWithoutEmbeddedStruct.Rendered
+		varPullrequest.Summary = varPullrequestWithoutEmbeddedStruct.Summary
+		varPullrequest.State = varPullrequestWithoutEmbeddedStruct.State
+		varPullrequest.Author = varPullrequestWithoutEmbeddedStruct.Author
+		varPullrequest.Source = varPullrequestWithoutEmbeddedStruct.Source
+		varPullrequest.Destination = varPullrequestWithoutEmbeddedStruct.Destination
+		varPullrequest.MergeCommit = varPullrequestWithoutEmbeddedStruct.MergeCommit
+		varPullrequest.CommentCount = varPullrequestWithoutEmbeddedStruct.CommentCount
+		varPullrequest.TaskCount = varPullrequestWithoutEmbeddedStruct.TaskCount
+		varPullrequest.CloseSourceBranch = varPullrequestWithoutEmbeddedStruct.CloseSourceBranch
+		varPullrequest.ClosedBy = varPullrequestWithoutEmbeddedStruct.ClosedBy
+		varPullrequest.Reason = varPullrequestWithoutEmbeddedStruct.Reason
+		varPullrequest.CreatedOn = varPullrequestWithoutEmbeddedStruct.CreatedOn
+		varPullrequest.UpdatedOn = varPullrequestWithoutEmbeddedStruct.UpdatedOn
+		varPullrequest.Reviewers = varPullrequestWithoutEmbeddedStruct.Reviewers
+		varPullrequest.Participants = varPullrequestWithoutEmbeddedStruct.Participants
+		*o = Pullrequest(varPullrequest)
+	} else {
+		return err
+	}
+
+	varPullrequest := _Pullrequest{}
+
+	err = json.Unmarshal(bytes, &varPullrequest)
+	if err == nil {
+		o.Object = varPullrequest.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "rendered")
+		delete(additionalProperties, "summary")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "author")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "destination")
+		delete(additionalProperties, "merge_commit")
+		delete(additionalProperties, "comment_count")
+		delete(additionalProperties, "task_count")
+		delete(additionalProperties, "close_source_branch")
+		delete(additionalProperties, "closed_by")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "reviewers")
+		delete(additionalProperties, "participants")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullrequest struct {

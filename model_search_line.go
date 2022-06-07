@@ -19,7 +19,10 @@ import (
 type SearchLine struct {
 	Line *int32 `json:"line,omitempty"`
 	Segments []SearchSegment `json:"segments,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchLine SearchLine
 
 // NewSearchLine instantiates a new SearchLine object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o SearchLine) MarshalJSON() ([]byte, error) {
 	if o.Segments != nil {
 		toSerialize["segments"] = o.Segments
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SearchLine) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchLine := _SearchLine{}
+
+	if err = json.Unmarshal(bytes, &varSearchLine); err == nil {
+		*o = SearchLine(varSearchLine)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "line")
+		delete(additionalProperties, "segments")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchLine struct {

@@ -19,7 +19,10 @@ import (
 type IssueAttachment struct {
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueAttachment IssueAttachment
 
 // NewIssueAttachment instantiates a new IssueAttachment object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o IssueAttachment) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueAttachment) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueAttachment := _IssueAttachment{}
+
+	if err = json.Unmarshal(bytes, &varIssueAttachment); err == nil {
+		*o = IssueAttachment(varIssueAttachment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueAttachment struct {

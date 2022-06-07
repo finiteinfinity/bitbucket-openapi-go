@@ -19,7 +19,10 @@ import (
 type PipelineCommitTarget struct {
 	Commit *Commit `json:"commit,omitempty"`
 	Selector *PipelineSelector `json:"selector,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineCommitTarget PipelineCommitTarget
 
 // NewPipelineCommitTarget instantiates a new PipelineCommitTarget object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o PipelineCommitTarget) MarshalJSON() ([]byte, error) {
 	if o.Selector != nil {
 		toSerialize["selector"] = o.Selector
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineCommitTarget) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineCommitTarget := _PipelineCommitTarget{}
+
+	if err = json.Unmarshal(bytes, &varPipelineCommitTarget); err == nil {
+		*o = PipelineCommitTarget(varPipelineCommitTarget)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "commit")
+		delete(additionalProperties, "selector")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineCommitTarget struct {

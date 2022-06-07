@@ -19,7 +19,10 @@ import (
 type PipelineStateCompletedSuccessfulAllOf struct {
 	// The name of the successful result (SUCCESSFUL).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStateCompletedSuccessfulAllOf PipelineStateCompletedSuccessfulAllOf
 
 // NewPipelineStateCompletedSuccessfulAllOf instantiates a new PipelineStateCompletedSuccessfulAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineStateCompletedSuccessfulAllOf) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStateCompletedSuccessfulAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStateCompletedSuccessfulAllOf := _PipelineStateCompletedSuccessfulAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStateCompletedSuccessfulAllOf); err == nil {
+		*o = PipelineStateCompletedSuccessfulAllOf(varPipelineStateCompletedSuccessfulAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStateCompletedSuccessfulAllOf struct {

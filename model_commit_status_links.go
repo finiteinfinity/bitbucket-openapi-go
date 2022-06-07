@@ -19,7 +19,10 @@ import (
 type CommitStatusLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Commit *Link `json:"commit,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommitStatusLinks CommitStatusLinks
 
 // NewCommitStatusLinks instantiates a new CommitStatusLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o CommitStatusLinks) MarshalJSON() ([]byte, error) {
 	if o.Commit != nil {
 		toSerialize["commit"] = o.Commit
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommitStatusLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varCommitStatusLinks := _CommitStatusLinks{}
+
+	if err = json.Unmarshal(bytes, &varCommitStatusLinks); err == nil {
+		*o = CommitStatusLinks(varCommitStatusLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "commit")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitStatusLinks struct {

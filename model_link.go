@@ -19,7 +19,10 @@ import (
 type Link struct {
 	Href *string `json:"href,omitempty"`
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Link Link
 
 // NewLink instantiates a new Link object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o Link) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Link) UnmarshalJSON(bytes []byte) (err error) {
+	varLink := _Link{}
+
+	if err = json.Unmarshal(bytes, &varLink); err == nil {
+		*o = Link(varLink)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "href")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLink struct {

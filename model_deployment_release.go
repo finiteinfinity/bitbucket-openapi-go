@@ -27,7 +27,10 @@ type DeploymentRelease struct {
 	Commit *Commit `json:"commit,omitempty"`
 	// The timestamp when the release was created.
 	CreatedOn *time.Time `json:"created_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentRelease DeploymentRelease
 
 // NewDeploymentRelease instantiates a new DeploymentRelease object
 // This constructor will assign default values to properties that have it defined,
@@ -223,7 +226,33 @@ func (o DeploymentRelease) MarshalJSON() ([]byte, error) {
 	if o.CreatedOn != nil {
 		toSerialize["created_on"] = o.CreatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentRelease) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentRelease := _DeploymentRelease{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentRelease); err == nil {
+		*o = DeploymentRelease(varDeploymentRelease)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "commit")
+		delete(additionalProperties, "created_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentRelease struct {

@@ -39,7 +39,10 @@ type Repository struct {
 	ForkPolicy *string `json:"fork_policy,omitempty"`
 	Project *Project `json:"project,omitempty"`
 	Mainbranch *Branch `json:"mainbranch,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Repository Repository
 
 // NewRepository instantiates a new Repository object
 // This constructor will assign default values to properties that have it defined,
@@ -690,7 +693,46 @@ func (o Repository) MarshalJSON() ([]byte, error) {
 	if o.Mainbranch != nil {
 		toSerialize["mainbranch"] = o.Mainbranch
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Repository) UnmarshalJSON(bytes []byte) (err error) {
+	varRepository := _Repository{}
+
+	if err = json.Unmarshal(bytes, &varRepository); err == nil {
+		*o = Repository(varRepository)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "full_name")
+		delete(additionalProperties, "is_private")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "scm")
+		delete(additionalProperties, "owner")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "language")
+		delete(additionalProperties, "has_issues")
+		delete(additionalProperties, "has_wiki")
+		delete(additionalProperties, "fork_policy")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "mainbranch")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRepository struct {

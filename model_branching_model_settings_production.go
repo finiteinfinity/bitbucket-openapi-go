@@ -27,7 +27,10 @@ type BranchingModelSettingsProduction struct {
 	BranchDoesNotExist *bool `json:"branch_does_not_exist,omitempty"`
 	// Indicates if branch is enabled or not.
 	Enabled *bool `json:"enabled,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelSettingsProduction BranchingModelSettingsProduction
 
 // NewBranchingModelSettingsProduction instantiates a new BranchingModelSettingsProduction object
 // This constructor will assign default values to properties that have it defined,
@@ -223,7 +226,33 @@ func (o BranchingModelSettingsProduction) MarshalJSON() ([]byte, error) {
 	if o.Enabled != nil {
 		toSerialize["enabled"] = o.Enabled
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelSettingsProduction) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelSettingsProduction := _BranchingModelSettingsProduction{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelSettingsProduction); err == nil {
+		*o = BranchingModelSettingsProduction(varBranchingModelSettingsProduction)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "is_valid")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "use_mainbranch")
+		delete(additionalProperties, "branch_does_not_exist")
+		delete(additionalProperties, "enabled")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelSettingsProduction struct {

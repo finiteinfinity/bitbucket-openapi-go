@@ -42,7 +42,10 @@ type ReportAnnotation struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	// The timestamp when the report was updated.
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReportAnnotation ReportAnnotation
 
 // NewReportAnnotation instantiates a new ReportAnnotation object
 // This constructor will assign default values to properties that have it defined,
@@ -483,7 +486,40 @@ func (o ReportAnnotation) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ReportAnnotation) UnmarshalJSON(bytes []byte) (err error) {
+	varReportAnnotation := _ReportAnnotation{}
+
+	if err = json.Unmarshal(bytes, &varReportAnnotation); err == nil {
+		*o = ReportAnnotation(varReportAnnotation)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "annotation_type")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "line")
+		delete(additionalProperties, "summary")
+		delete(additionalProperties, "details")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "severity")
+		delete(additionalProperties, "link")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReportAnnotation struct {

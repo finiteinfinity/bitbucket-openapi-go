@@ -22,7 +22,10 @@ type RepositoryUserPermission struct {
 	User *User `json:"user,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RepositoryUserPermission RepositoryUserPermission
 
 // NewRepositoryUserPermission instantiates a new RepositoryUserPermission object
 // This constructor will assign default values to properties that have it defined,
@@ -210,7 +213,33 @@ func (o RepositoryUserPermission) MarshalJSON() ([]byte, error) {
 	if o.Links != nil {
 		toSerialize["links"] = o.Links
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RepositoryUserPermission) UnmarshalJSON(bytes []byte) (err error) {
+	varRepositoryUserPermission := _RepositoryUserPermission{}
+
+	if err = json.Unmarshal(bytes, &varRepositoryUserPermission); err == nil {
+		*o = RepositoryUserPermission(varRepositoryUserPermission)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "permission")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "links")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRepositoryUserPermission struct {

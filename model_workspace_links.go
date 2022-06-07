@@ -25,7 +25,10 @@ type WorkspaceLinks struct {
 	Repositories *Link `json:"repositories,omitempty"`
 	Snippets *Link `json:"snippets,omitempty"`
 	Self *Link `json:"self,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _WorkspaceLinks WorkspaceLinks
 
 // NewWorkspaceLinks instantiates a new WorkspaceLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -326,7 +329,36 @@ func (o WorkspaceLinks) MarshalJSON() ([]byte, error) {
 	if o.Self != nil {
 		toSerialize["self"] = o.Self
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *WorkspaceLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varWorkspaceLinks := _WorkspaceLinks{}
+
+	if err = json.Unmarshal(bytes, &varWorkspaceLinks); err == nil {
+		*o = WorkspaceLinks(varWorkspaceLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "avatar")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "members")
+		delete(additionalProperties, "owners")
+		delete(additionalProperties, "projects")
+		delete(additionalProperties, "repositories")
+		delete(additionalProperties, "snippets")
+		delete(additionalProperties, "self")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableWorkspaceLinks struct {

@@ -27,7 +27,10 @@ type RepositoryLinks struct {
 	Downloads *Link `json:"downloads,omitempty"`
 	Clone []Link `json:"clone,omitempty"`
 	Hooks *Link `json:"hooks,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RepositoryLinks RepositoryLinks
 
 // NewRepositoryLinks instantiates a new RepositoryLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -398,7 +401,38 @@ func (o RepositoryLinks) MarshalJSON() ([]byte, error) {
 	if o.Hooks != nil {
 		toSerialize["hooks"] = o.Hooks
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RepositoryLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varRepositoryLinks := _RepositoryLinks{}
+
+	if err = json.Unmarshal(bytes, &varRepositoryLinks); err == nil {
+		*o = RepositoryLinks(varRepositoryLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "avatar")
+		delete(additionalProperties, "pullrequests")
+		delete(additionalProperties, "commits")
+		delete(additionalProperties, "forks")
+		delete(additionalProperties, "watchers")
+		delete(additionalProperties, "downloads")
+		delete(additionalProperties, "clone")
+		delete(additionalProperties, "hooks")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRepositoryLinks struct {

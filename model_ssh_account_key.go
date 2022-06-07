@@ -13,13 +13,18 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // SshAccountKey struct for SshAccountKey
 type SshAccountKey struct {
 	SshKey
 	Owner *Account `json:"owner,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SshAccountKey SshAccountKey
 
 // NewSshAccountKey instantiates a new SshAccountKey object
 // This constructor will assign default values to properties that have it defined,
@@ -83,7 +88,66 @@ func (o SshAccountKey) MarshalJSON() ([]byte, error) {
 	if o.Owner != nil {
 		toSerialize["owner"] = o.Owner
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SshAccountKey) UnmarshalJSON(bytes []byte) (err error) {
+	type SshAccountKeyWithoutEmbeddedStruct struct {
+		Owner *Account `json:"owner,omitempty"`
+	}
+
+	varSshAccountKeyWithoutEmbeddedStruct := SshAccountKeyWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varSshAccountKeyWithoutEmbeddedStruct)
+	if err == nil {
+		varSshAccountKey := _SshAccountKey{}
+		varSshAccountKey.Owner = varSshAccountKeyWithoutEmbeddedStruct.Owner
+		*o = SshAccountKey(varSshAccountKey)
+	} else {
+		return err
+	}
+
+	varSshAccountKey := _SshAccountKey{}
+
+	err = json.Unmarshal(bytes, &varSshAccountKey)
+	if err == nil {
+		o.SshKey = varSshAccountKey.SshKey
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "owner")
+
+		// remove fields from embedded structs
+		reflectSshKey := reflect.ValueOf(o.SshKey)
+		for i := 0; i < reflectSshKey.Type().NumField(); i++ {
+			t := reflectSshKey.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSshAccountKey struct {

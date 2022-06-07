@@ -21,7 +21,10 @@ type ErrorError struct {
 	Detail *string `json:"detail,omitempty"`
 	// Optional structured data that is endpoint-specific.
 	Data map[string]interface{} `json:"data,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ErrorError ErrorError
 
 // NewErrorError instantiates a new ErrorError object
 // This constructor will assign default values to properties that have it defined,
@@ -140,7 +143,31 @@ func (o ErrorError) MarshalJSON() ([]byte, error) {
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ErrorError) UnmarshalJSON(bytes []byte) (err error) {
+	varErrorError := _ErrorError{}
+
+	if err = json.Unmarshal(bytes, &varErrorError); err == nil {
+		*o = ErrorError(varErrorError)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "detail")
+		delete(additionalProperties, "data")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableErrorError struct {

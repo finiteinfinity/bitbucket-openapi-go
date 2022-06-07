@@ -24,7 +24,10 @@ type CommitFile struct {
 	Attributes *string `json:"attributes,omitempty"`
 	// The escaped version of the path as it appears in a diff. If the path does not require escaping this will be the same as path.
 	EscapedPath *string `json:"escaped_path,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommitFile CommitFile
 
 // NewCommitFile instantiates a new CommitFile object
 // This constructor will assign default values to properties that have it defined,
@@ -212,7 +215,33 @@ func (o CommitFile) MarshalJSON() ([]byte, error) {
 	if o.EscapedPath != nil {
 		toSerialize["escaped_path"] = o.EscapedPath
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommitFile) UnmarshalJSON(bytes []byte) (err error) {
+	varCommitFile := _CommitFile{}
+
+	if err = json.Unmarshal(bytes, &varCommitFile); err == nil {
+		*o = CommitFile(varCommitFile)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "commit")
+		delete(additionalProperties, "attributes")
+		delete(additionalProperties, "escaped_path")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitFile struct {

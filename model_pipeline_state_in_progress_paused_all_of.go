@@ -19,7 +19,10 @@ import (
 type PipelineStateInProgressPausedAllOf struct {
 	// The name of the stage (PAUSED)
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStateInProgressPausedAllOf PipelineStateInProgressPausedAllOf
 
 // NewPipelineStateInProgressPausedAllOf instantiates a new PipelineStateInProgressPausedAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineStateInProgressPausedAllOf) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStateInProgressPausedAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStateInProgressPausedAllOf := _PipelineStateInProgressPausedAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStateInProgressPausedAllOf); err == nil {
+		*o = PipelineStateInProgressPausedAllOf(varPipelineStateInProgressPausedAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStateInProgressPausedAllOf struct {

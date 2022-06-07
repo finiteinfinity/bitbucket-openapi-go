@@ -23,7 +23,10 @@ type CommentInline struct {
 	From *int32 `json:"from,omitempty"`
 	// The path of the file this comment is anchored to.
 	Path string `json:"path"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommentInline CommentInline
 
 // NewCommentInline instantiates a new CommentInline object
 // This constructor will assign default values to properties that have it defined,
@@ -142,7 +145,31 @@ func (o CommentInline) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["path"] = o.Path
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommentInline) UnmarshalJSON(bytes []byte) (err error) {
+	varCommentInline := _CommentInline{}
+
+	if err = json.Unmarshal(bytes, &varCommentInline); err == nil {
+		*o = CommentInline(varCommentInline)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "to")
+		delete(additionalProperties, "from")
+		delete(additionalProperties, "path")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommentInline struct {

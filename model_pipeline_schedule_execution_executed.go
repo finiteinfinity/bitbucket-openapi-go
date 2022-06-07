@@ -13,13 +13,18 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineScheduleExecutionExecuted struct for PipelineScheduleExecutionExecuted
 type PipelineScheduleExecutionExecuted struct {
 	PipelineScheduleExecution
 	Pipeline *Pipeline `json:"pipeline,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineScheduleExecutionExecuted PipelineScheduleExecutionExecuted
 
 // NewPipelineScheduleExecutionExecuted instantiates a new PipelineScheduleExecutionExecuted object
 // This constructor will assign default values to properties that have it defined,
@@ -83,7 +88,66 @@ func (o PipelineScheduleExecutionExecuted) MarshalJSON() ([]byte, error) {
 	if o.Pipeline != nil {
 		toSerialize["pipeline"] = o.Pipeline
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineScheduleExecutionExecuted) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineScheduleExecutionExecutedWithoutEmbeddedStruct struct {
+		Pipeline *Pipeline `json:"pipeline,omitempty"`
+	}
+
+	varPipelineScheduleExecutionExecutedWithoutEmbeddedStruct := PipelineScheduleExecutionExecutedWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecutionExecutedWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineScheduleExecutionExecuted := _PipelineScheduleExecutionExecuted{}
+		varPipelineScheduleExecutionExecuted.Pipeline = varPipelineScheduleExecutionExecutedWithoutEmbeddedStruct.Pipeline
+		*o = PipelineScheduleExecutionExecuted(varPipelineScheduleExecutionExecuted)
+	} else {
+		return err
+	}
+
+	varPipelineScheduleExecutionExecuted := _PipelineScheduleExecutionExecuted{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecutionExecuted)
+	if err == nil {
+		o.PipelineScheduleExecution = varPipelineScheduleExecutionExecuted.PipelineScheduleExecution
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "pipeline")
+
+		// remove fields from embedded structs
+		reflectPipelineScheduleExecution := reflect.ValueOf(o.PipelineScheduleExecution)
+		for i := 0; i < reflectPipelineScheduleExecution.Type().NumField(); i++ {
+			t := reflectPipelineScheduleExecution.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineScheduleExecutionExecuted struct {

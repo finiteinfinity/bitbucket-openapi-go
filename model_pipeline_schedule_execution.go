@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineScheduleExecution struct for PipelineScheduleExecution
 type PipelineScheduleExecution struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineScheduleExecution PipelineScheduleExecution
 
 // NewPipelineScheduleExecution instantiates a new PipelineScheduleExecution object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineScheduleExecution) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineScheduleExecution) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineScheduleExecutionWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineScheduleExecutionWithoutEmbeddedStruct := PipelineScheduleExecutionWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecutionWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineScheduleExecution := _PipelineScheduleExecution{}
+		*o = PipelineScheduleExecution(varPipelineScheduleExecution)
+	} else {
+		return err
+	}
+
+	varPipelineScheduleExecution := _PipelineScheduleExecution{}
+
+	err = json.Unmarshal(bytes, &varPipelineScheduleExecution)
+	if err == nil {
+		o.Object = varPipelineScheduleExecution.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineScheduleExecution struct {

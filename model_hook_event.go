@@ -25,7 +25,10 @@ type HookEvent struct {
 	Label *string `json:"label,omitempty"`
 	// More detailed description of the webhook event type.
 	Description *string `json:"description,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HookEvent HookEvent
 
 // NewHookEvent instantiates a new HookEvent object
 // This constructor will assign default values to properties that have it defined,
@@ -186,7 +189,32 @@ func (o HookEvent) MarshalJSON() ([]byte, error) {
 	if o.Description != nil {
 		toSerialize["description"] = o.Description
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *HookEvent) UnmarshalJSON(bytes []byte) (err error) {
+	varHookEvent := _HookEvent{}
+
+	if err = json.Unmarshal(bytes, &varHookEvent); err == nil {
+		*o = HookEvent(varHookEvent)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "event")
+		delete(additionalProperties, "category")
+		delete(additionalProperties, "label")
+		delete(additionalProperties, "description")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHookEvent struct {

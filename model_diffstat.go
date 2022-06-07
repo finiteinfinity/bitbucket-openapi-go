@@ -23,7 +23,10 @@ type Diffstat struct {
 	LinesRemoved *int32 `json:"lines_removed,omitempty"`
 	Old *CommitFile `json:"old,omitempty"`
 	New *CommitFile `json:"new,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Diffstat Diffstat
 
 // NewDiffstat instantiates a new Diffstat object
 // This constructor will assign default values to properties that have it defined,
@@ -246,7 +249,34 @@ func (o Diffstat) MarshalJSON() ([]byte, error) {
 	if o.New != nil {
 		toSerialize["new"] = o.New
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Diffstat) UnmarshalJSON(bytes []byte) (err error) {
+	varDiffstat := _Diffstat{}
+
+	if err = json.Unmarshal(bytes, &varDiffstat); err == nil {
+		*o = Diffstat(varDiffstat)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "lines_added")
+		delete(additionalProperties, "lines_removed")
+		delete(additionalProperties, "old")
+		delete(additionalProperties, "new")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDiffstat struct {

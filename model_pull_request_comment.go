@@ -18,7 +18,10 @@ import (
 // PullRequestComment A pullrequest comment.
 type PullRequestComment struct {
 	Pullrequest *Pullrequest `json:"pullrequest,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullRequestComment PullRequestComment
 
 // NewPullRequestComment instantiates a new PullRequestComment object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o PullRequestComment) MarshalJSON() ([]byte, error) {
 	if o.Pullrequest != nil {
 		toSerialize["pullrequest"] = o.Pullrequest
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullRequestComment) UnmarshalJSON(bytes []byte) (err error) {
+	varPullRequestComment := _PullRequestComment{}
+
+	if err = json.Unmarshal(bytes, &varPullRequestComment); err == nil {
+		*o = PullRequestComment(varPullRequestComment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "pullrequest")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullRequestComment struct {

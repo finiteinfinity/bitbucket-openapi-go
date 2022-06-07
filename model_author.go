@@ -20,7 +20,10 @@ type Author struct {
 	// The raw author value from the repository. This may be the only value available if the author does not match a user in Bitbucket.
 	Raw *string `json:"raw,omitempty"`
 	User *Account `json:"user,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Author Author
 
 // NewAuthor instantiates a new Author object
 // This constructor will assign default values to properties that have it defined,
@@ -111,7 +114,30 @@ func (o Author) MarshalJSON() ([]byte, error) {
 	if o.User != nil {
 		toSerialize["user"] = o.User
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Author) UnmarshalJSON(bytes []byte) (err error) {
+	varAuthor := _Author{}
+
+	if err = json.Unmarshal(bytes, &varAuthor); err == nil {
+		*o = Author(varAuthor)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "raw")
+		delete(additionalProperties, "user")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAuthor struct {

@@ -24,7 +24,10 @@ type BaseCommit struct {
 	Message *string `json:"message,omitempty"`
 	Summary *RenderedPullRequestMarkupTitle `json:"summary,omitempty"`
 	Parents []BaseCommit `json:"parents,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BaseCommit BaseCommit
 
 // NewBaseCommit instantiates a new BaseCommit object
 // This constructor will assign default values to properties that have it defined,
@@ -255,7 +258,34 @@ func (o BaseCommit) MarshalJSON() ([]byte, error) {
 	if o.Parents != nil {
 		toSerialize["parents"] = o.Parents
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BaseCommit) UnmarshalJSON(bytes []byte) (err error) {
+	varBaseCommit := _BaseCommit{}
+
+	if err = json.Unmarshal(bytes, &varBaseCommit); err == nil {
+		*o = BaseCommit(varBaseCommit)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "hash")
+		delete(additionalProperties, "date")
+		delete(additionalProperties, "author")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "summary")
+		delete(additionalProperties, "parents")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBaseCommit struct {

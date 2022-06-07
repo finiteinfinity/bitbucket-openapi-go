@@ -21,7 +21,10 @@ type TeamPermission struct {
 	Permission *string `json:"permission,omitempty"`
 	User *User `json:"user,omitempty"`
 	Team *Team `json:"team,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TeamPermission TeamPermission
 
 // NewTeamPermission instantiates a new TeamPermission object
 // This constructor will assign default values to properties that have it defined,
@@ -174,7 +177,32 @@ func (o TeamPermission) MarshalJSON() ([]byte, error) {
 	if o.Team != nil {
 		toSerialize["team"] = o.Team
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *TeamPermission) UnmarshalJSON(bytes []byte) (err error) {
+	varTeamPermission := _TeamPermission{}
+
+	if err = json.Unmarshal(bytes, &varTeamPermission); err == nil {
+		*o = TeamPermission(varTeamPermission)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "permission")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "team")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTeamPermission struct {

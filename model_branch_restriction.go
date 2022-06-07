@@ -30,9 +30,12 @@ type BranchRestriction struct {
 	Pattern string `json:"pattern"`
 	Users []Account `json:"users,omitempty"`
 	Groups []Group `json:"groups,omitempty"`
-	// <staticmethod object at 0x7f9f8727b5d0>
+	// <staticmethod object at 0x7facec283c90>
 	Value *int32 `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchRestriction BranchRestriction
 
 // NewBranchRestriction instantiates a new BranchRestriction object
 // This constructor will assign default values to properties that have it defined,
@@ -347,7 +350,37 @@ func (o BranchRestriction) MarshalJSON() ([]byte, error) {
 	if o.Value != nil {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchRestriction) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchRestriction := _BranchRestriction{}
+
+	if err = json.Unmarshal(bytes, &varBranchRestriction); err == nil {
+		*o = BranchRestriction(varBranchRestriction)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "branch_match_kind")
+		delete(additionalProperties, "branch_type")
+		delete(additionalProperties, "pattern")
+		delete(additionalProperties, "users")
+		delete(additionalProperties, "groups")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchRestriction struct {

@@ -24,7 +24,10 @@ type PullrequestMergeParameters struct {
 	CloseSourceBranch *bool `json:"close_source_branch,omitempty"`
 	// The merge strategy that will be used to merge the pull request.
 	MergeStrategy *string `json:"merge_strategy,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullrequestMergeParameters PullrequestMergeParameters
 
 // NewPullrequestMergeParameters instantiates a new PullrequestMergeParameters object
 // This constructor will assign default values to properties that have it defined,
@@ -181,7 +184,32 @@ func (o PullrequestMergeParameters) MarshalJSON() ([]byte, error) {
 	if o.MergeStrategy != nil {
 		toSerialize["merge_strategy"] = o.MergeStrategy
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullrequestMergeParameters) UnmarshalJSON(bytes []byte) (err error) {
+	varPullrequestMergeParameters := _PullrequestMergeParameters{}
+
+	if err = json.Unmarshal(bytes, &varPullrequestMergeParameters); err == nil {
+		*o = PullrequestMergeParameters(varPullrequestMergeParameters)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "close_source_branch")
+		delete(additionalProperties, "merge_strategy")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullrequestMergeParameters struct {

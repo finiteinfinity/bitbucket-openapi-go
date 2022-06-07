@@ -27,7 +27,10 @@ type Snippet struct {
 	Owner *Account `json:"owner,omitempty"`
 	Creator *Account `json:"creator,omitempty"`
 	IsPrivate *bool `json:"is_private,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Snippet Snippet
 
 // NewSnippet instantiates a new Snippet object
 // This constructor will assign default values to properties that have it defined,
@@ -328,7 +331,36 @@ func (o Snippet) MarshalJSON() ([]byte, error) {
 	if o.IsPrivate != nil {
 		toSerialize["is_private"] = o.IsPrivate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Snippet) UnmarshalJSON(bytes []byte) (err error) {
+	varSnippet := _Snippet{}
+
+	if err = json.Unmarshal(bytes, &varSnippet); err == nil {
+		*o = Snippet(varSnippet)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "scm")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "owner")
+		delete(additionalProperties, "creator")
+		delete(additionalProperties, "is_private")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSnippet struct {

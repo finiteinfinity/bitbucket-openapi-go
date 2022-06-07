@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineState struct for PipelineState
 type PipelineState struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineState PipelineState
 
 // NewPipelineState instantiates a new PipelineState object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineState) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineState) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStateWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineStateWithoutEmbeddedStruct := PipelineStateWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineState := _PipelineState{}
+		*o = PipelineState(varPipelineState)
+	} else {
+		return err
+	}
+
+	varPipelineState := _PipelineState{}
+
+	err = json.Unmarshal(bytes, &varPipelineState)
+	if err == nil {
+		o.Object = varPipelineState.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineState struct {

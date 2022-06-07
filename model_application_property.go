@@ -18,7 +18,10 @@ import (
 // ApplicationProperty An application property. It is a caller defined JSON object that Bitbucket will store and return.  The `_attributes` field at its top level can be used to control who is allowed to read and update the property.  The keys of the JSON object must match an allowed pattern. For details,  see [Application properties](/cloud/bitbucket/application-properties/). 
 type ApplicationProperty struct {
 	Attributes []string `json:"_attributes,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationProperty ApplicationProperty
 
 // NewApplicationProperty instantiates a new ApplicationProperty object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o ApplicationProperty) MarshalJSON() ([]byte, error) {
 	if o.Attributes != nil {
 		toSerialize["_attributes"] = o.Attributes
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ApplicationProperty) UnmarshalJSON(bytes []byte) (err error) {
+	varApplicationProperty := _ApplicationProperty{}
+
+	if err = json.Unmarshal(bytes, &varApplicationProperty); err == nil {
+		*o = ApplicationProperty(varApplicationProperty)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "_attributes")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationProperty struct {

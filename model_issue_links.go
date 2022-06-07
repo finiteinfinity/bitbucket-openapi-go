@@ -23,7 +23,10 @@ type IssueLinks struct {
 	Attachments *Link `json:"attachments,omitempty"`
 	Watch *Link `json:"watch,omitempty"`
 	Vote *Link `json:"vote,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueLinks IssueLinks
 
 // NewIssueLinks instantiates a new IssueLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -254,7 +257,34 @@ func (o IssueLinks) MarshalJSON() ([]byte, error) {
 	if o.Vote != nil {
 		toSerialize["vote"] = o.Vote
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueLinks := _IssueLinks{}
+
+	if err = json.Unmarshal(bytes, &varIssueLinks); err == nil {
+		*o = IssueLinks(varIssueLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "comments")
+		delete(additionalProperties, "attachments")
+		delete(additionalProperties, "watch")
+		delete(additionalProperties, "vote")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueLinks struct {

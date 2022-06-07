@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // Branchrestriction struct for Branchrestriction
@@ -31,9 +33,12 @@ type Branchrestriction struct {
 	Pattern string `json:"pattern"`
 	Users []Account `json:"users,omitempty"`
 	Groups []Group `json:"groups,omitempty"`
-	// <staticmethod object at 0x7f9f8727b5d0>
+	// <staticmethod object at 0x7facec283c90>
 	Value *int32 `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Branchrestriction Branchrestriction
 
 // NewBranchrestriction instantiates a new Branchrestriction object
 // This constructor will assign default values to properties that have it defined,
@@ -356,7 +361,96 @@ func (o Branchrestriction) MarshalJSON() ([]byte, error) {
 	if o.Value != nil {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Branchrestriction) UnmarshalJSON(bytes []byte) (err error) {
+	type BranchrestrictionWithoutEmbeddedStruct struct {
+		Links *BranchingModelSettingsLinks `json:"links,omitempty"`
+		// The branch restriction status' id.
+		Id *int32 `json:"id,omitempty"`
+		// The type of restriction that is being applied.
+		Kind string `json:"kind"`
+		// Indicates how the restriction is matched against a branch. The default is `glob`.
+		BranchMatchKind string `json:"branch_match_kind"`
+		// Apply the restriction to branches of this type. Active when `branch_match_kind` is `branching_model`. The branch type will be calculated using the branching model configured for the repository.
+		BranchType *string `json:"branch_type,omitempty"`
+		// Apply the restriction to branches that match this pattern. Active when `branch_match_kind` is `glob`. Will be empty when `branch_match_kind` is `branching_model`.
+		Pattern string `json:"pattern"`
+		Users []Account `json:"users,omitempty"`
+		Groups []Group `json:"groups,omitempty"`
+		// <staticmethod object at 0x7facec283c90>
+		Value *int32 `json:"value,omitempty"`
+	}
+
+	varBranchrestrictionWithoutEmbeddedStruct := BranchrestrictionWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varBranchrestrictionWithoutEmbeddedStruct)
+	if err == nil {
+		varBranchrestriction := _Branchrestriction{}
+		varBranchrestriction.Links = varBranchrestrictionWithoutEmbeddedStruct.Links
+		varBranchrestriction.Id = varBranchrestrictionWithoutEmbeddedStruct.Id
+		varBranchrestriction.Kind = varBranchrestrictionWithoutEmbeddedStruct.Kind
+		varBranchrestriction.BranchMatchKind = varBranchrestrictionWithoutEmbeddedStruct.BranchMatchKind
+		varBranchrestriction.BranchType = varBranchrestrictionWithoutEmbeddedStruct.BranchType
+		varBranchrestriction.Pattern = varBranchrestrictionWithoutEmbeddedStruct.Pattern
+		varBranchrestriction.Users = varBranchrestrictionWithoutEmbeddedStruct.Users
+		varBranchrestriction.Groups = varBranchrestrictionWithoutEmbeddedStruct.Groups
+		varBranchrestriction.Value = varBranchrestrictionWithoutEmbeddedStruct.Value
+		*o = Branchrestriction(varBranchrestriction)
+	} else {
+		return err
+	}
+
+	varBranchrestriction := _Branchrestriction{}
+
+	err = json.Unmarshal(bytes, &varBranchrestriction)
+	if err == nil {
+		o.Object = varBranchrestriction.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "branch_match_kind")
+		delete(additionalProperties, "branch_type")
+		delete(additionalProperties, "pattern")
+		delete(additionalProperties, "users")
+		delete(additionalProperties, "groups")
+		delete(additionalProperties, "value")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchrestriction struct {

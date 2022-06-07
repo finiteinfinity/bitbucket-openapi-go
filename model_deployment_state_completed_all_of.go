@@ -28,7 +28,10 @@ type DeploymentStateCompletedAllOf struct {
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// The timestamp when the deployment completed.
 	CompletionDate *time.Time `json:"completion_date,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateCompletedAllOf DeploymentStateCompletedAllOf
 
 // NewDeploymentStateCompletedAllOf instantiates a new DeploymentStateCompletedAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -259,7 +262,34 @@ func (o DeploymentStateCompletedAllOf) MarshalJSON() ([]byte, error) {
 	if o.CompletionDate != nil {
 		toSerialize["completion_date"] = o.CompletionDate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateCompletedAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentStateCompletedAllOf := _DeploymentStateCompletedAllOf{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentStateCompletedAllOf); err == nil {
+		*o = DeploymentStateCompletedAllOf(varDeploymentStateCompletedAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "deployer")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "start_date")
+		delete(additionalProperties, "completion_date")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateCompletedAllOf struct {

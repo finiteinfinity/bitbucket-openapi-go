@@ -23,7 +23,10 @@ type Tag struct {
 	// The date that the tag was created, if available
 	Date *time.Time `json:"date,omitempty"`
 	Tagger *Author `json:"tagger,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Tag Tag
 
 // NewTag instantiates a new Tag object
 // This constructor will assign default values to properties that have it defined,
@@ -149,7 +152,31 @@ func (o Tag) MarshalJSON() ([]byte, error) {
 	if o.Tagger != nil {
 		toSerialize["tagger"] = o.Tagger
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Tag) UnmarshalJSON(bytes []byte) (err error) {
+	varTag := _Tag{}
+
+	if err = json.Unmarshal(bytes, &varTag); err == nil {
+		*o = Tag(varTag)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "date")
+		delete(additionalProperties, "tagger")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTag struct {

@@ -20,7 +20,10 @@ type PipelineInProgressState struct {
 	// The name of pipeline state (IN_PROGRESS).
 	Name *string `json:"name,omitempty"`
 	Stage *PipelineStateInProgressStage `json:"stage,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineInProgressState PipelineInProgressState
 
 // NewPipelineInProgressState instantiates a new PipelineInProgressState object
 // This constructor will assign default values to properties that have it defined,
@@ -111,7 +114,30 @@ func (o PipelineInProgressState) MarshalJSON() ([]byte, error) {
 	if o.Stage != nil {
 		toSerialize["stage"] = o.Stage
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineInProgressState) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineInProgressState := _PipelineInProgressState{}
+
+	if err = json.Unmarshal(bytes, &varPipelineInProgressState); err == nil {
+		*o = PipelineInProgressState(varPipelineInProgressState)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "stage")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineInProgressState struct {

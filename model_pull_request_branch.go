@@ -22,7 +22,10 @@ type PullRequestBranch struct {
 	MergeStrategies []string `json:"merge_strategies,omitempty"`
 	// The default merge strategy, when this endpoint is the destination of the pull request.
 	DefaultMergeStrategy *string `json:"default_merge_strategy,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullRequestBranch PullRequestBranch
 
 // NewPullRequestBranch instantiates a new PullRequestBranch object
 // This constructor will assign default values to properties that have it defined,
@@ -148,7 +151,31 @@ func (o PullRequestBranch) MarshalJSON() ([]byte, error) {
 	if o.DefaultMergeStrategy != nil {
 		toSerialize["default_merge_strategy"] = o.DefaultMergeStrategy
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullRequestBranch) UnmarshalJSON(bytes []byte) (err error) {
+	varPullRequestBranch := _PullRequestBranch{}
+
+	if err = json.Unmarshal(bytes, &varPullRequestBranch); err == nil {
+		*o = PullRequestBranch(varPullRequestBranch)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "merge_strategies")
+		delete(additionalProperties, "default_merge_strategy")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullRequestBranch struct {

@@ -19,7 +19,10 @@ import (
 type PipelinePendingState struct {
 	// The name of pipeline state (PENDING).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelinePendingState PipelinePendingState
 
 // NewPipelinePendingState instantiates a new PipelinePendingState object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelinePendingState) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelinePendingState) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelinePendingState := _PipelinePendingState{}
+
+	if err = json.Unmarshal(bytes, &varPipelinePendingState); err == nil {
+		*o = PipelinePendingState(varPipelinePendingState)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelinePendingState struct {

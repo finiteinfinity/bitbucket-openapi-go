@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStateInProgress struct for PipelineStateInProgress
@@ -21,7 +23,10 @@ type PipelineStateInProgress struct {
 	// The name of pipeline state (IN_PROGRESS).
 	Name *string `json:"name,omitempty"`
 	Stage *PipelineStateInProgressStage `json:"stage,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStateInProgress PipelineStateInProgress
 
 // NewPipelineStateInProgress instantiates a new PipelineStateInProgress object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +125,70 @@ func (o PipelineStateInProgress) MarshalJSON() ([]byte, error) {
 	if o.Stage != nil {
 		toSerialize["stage"] = o.Stage
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStateInProgress) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStateInProgressWithoutEmbeddedStruct struct {
+		// The name of pipeline state (IN_PROGRESS).
+		Name *string `json:"name,omitempty"`
+		Stage *PipelineStateInProgressStage `json:"stage,omitempty"`
+	}
+
+	varPipelineStateInProgressWithoutEmbeddedStruct := PipelineStateInProgressWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateInProgressWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStateInProgress := _PipelineStateInProgress{}
+		varPipelineStateInProgress.Name = varPipelineStateInProgressWithoutEmbeddedStruct.Name
+		varPipelineStateInProgress.Stage = varPipelineStateInProgressWithoutEmbeddedStruct.Stage
+		*o = PipelineStateInProgress(varPipelineStateInProgress)
+	} else {
+		return err
+	}
+
+	varPipelineStateInProgress := _PipelineStateInProgress{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateInProgress)
+	if err == nil {
+		o.PipelineState = varPipelineStateInProgress.PipelineState
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "stage")
+
+		// remove fields from embedded structs
+		reflectPipelineState := reflect.ValueOf(o.PipelineState)
+		for i := 0; i < reflectPipelineState.Type().NumField(); i++ {
+			t := reflectPipelineState.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStateInProgress struct {

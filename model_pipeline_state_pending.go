@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStatePending struct for PipelineStatePending
@@ -20,7 +22,10 @@ type PipelineStatePending struct {
 	PipelineState
 	// The name of pipeline state (PENDING).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStatePending PipelineStatePending
 
 // NewPipelineStatePending instantiates a new PipelineStatePending object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +89,67 @@ func (o PipelineStatePending) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStatePending) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStatePendingWithoutEmbeddedStruct struct {
+		// The name of pipeline state (PENDING).
+		Name *string `json:"name,omitempty"`
+	}
+
+	varPipelineStatePendingWithoutEmbeddedStruct := PipelineStatePendingWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStatePendingWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStatePending := _PipelineStatePending{}
+		varPipelineStatePending.Name = varPipelineStatePendingWithoutEmbeddedStruct.Name
+		*o = PipelineStatePending(varPipelineStatePending)
+	} else {
+		return err
+	}
+
+	varPipelineStatePending := _PipelineStatePending{}
+
+	err = json.Unmarshal(bytes, &varPipelineStatePending)
+	if err == nil {
+		o.PipelineState = varPipelineStatePending.PipelineState
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectPipelineState := reflect.ValueOf(o.PipelineState)
+		for i := 0; i < reflectPipelineState.Type().NumField(); i++ {
+			t := reflectPipelineState.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStatePending struct {

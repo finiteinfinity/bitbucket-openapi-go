@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelinesDdevPipelineStep struct for PipelinesDdevPipelineStep
 type PipelinesDdevPipelineStep struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelinesDdevPipelineStep PipelinesDdevPipelineStep
 
 // NewPipelinesDdevPipelineStep instantiates a new PipelinesDdevPipelineStep object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelinesDdevPipelineStep) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelinesDdevPipelineStep) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelinesDdevPipelineStepWithoutEmbeddedStruct struct {
+	}
+
+	varPipelinesDdevPipelineStepWithoutEmbeddedStruct := PipelinesDdevPipelineStepWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelinesDdevPipelineStepWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelinesDdevPipelineStep := _PipelinesDdevPipelineStep{}
+		*o = PipelinesDdevPipelineStep(varPipelinesDdevPipelineStep)
+	} else {
+		return err
+	}
+
+	varPipelinesDdevPipelineStep := _PipelinesDdevPipelineStep{}
+
+	err = json.Unmarshal(bytes, &varPipelinesDdevPipelineStep)
+	if err == nil {
+		o.Object = varPipelinesDdevPipelineStep.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelinesDdevPipelineStep struct {

@@ -20,7 +20,10 @@ type WorkspaceMembership struct {
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
 	User *Account `json:"user,omitempty"`
 	Workspace *Workspace `json:"workspace,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _WorkspaceMembership WorkspaceMembership
 
 // NewWorkspaceMembership instantiates a new WorkspaceMembership object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o WorkspaceMembership) MarshalJSON() ([]byte, error) {
 	if o.Workspace != nil {
 		toSerialize["workspace"] = o.Workspace
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *WorkspaceMembership) UnmarshalJSON(bytes []byte) (err error) {
+	varWorkspaceMembership := _WorkspaceMembership{}
+
+	if err = json.Unmarshal(bytes, &varWorkspaceMembership); err == nil {
+		*o = WorkspaceMembership(varWorkspaceMembership)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "workspace")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableWorkspaceMembership struct {

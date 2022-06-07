@@ -22,7 +22,10 @@ type Deployment struct {
 	State *DeploymentState `json:"state,omitempty"`
 	Environment *DeploymentEnvironment `json:"environment,omitempty"`
 	Release *DeploymentRelease `json:"release,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Deployment Deployment
 
 // NewDeployment instantiates a new Deployment object
 // This constructor will assign default values to properties that have it defined,
@@ -183,7 +186,32 @@ func (o Deployment) MarshalJSON() ([]byte, error) {
 	if o.Release != nil {
 		toSerialize["release"] = o.Release
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Deployment) UnmarshalJSON(bytes []byte) (err error) {
+	varDeployment := _Deployment{}
+
+	if err = json.Unmarshal(bytes, &varDeployment); err == nil {
+		*o = Deployment(varDeployment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "environment")
+		delete(additionalProperties, "release")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeployment struct {

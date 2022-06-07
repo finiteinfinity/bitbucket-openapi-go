@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStepStateCompletedResult struct for PipelineStepStateCompletedResult
 type PipelineStepStateCompletedResult struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepStateCompletedResult PipelineStepStateCompletedResult
 
 // NewPipelineStepStateCompletedResult instantiates a new PipelineStepStateCompletedResult object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineStepStateCompletedResult) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepStateCompletedResult) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStepStateCompletedResultWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineStepStateCompletedResultWithoutEmbeddedStruct := PipelineStepStateCompletedResultWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepStateCompletedResultWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStepStateCompletedResult := _PipelineStepStateCompletedResult{}
+		*o = PipelineStepStateCompletedResult(varPipelineStepStateCompletedResult)
+	} else {
+		return err
+	}
+
+	varPipelineStepStateCompletedResult := _PipelineStepStateCompletedResult{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepStateCompletedResult)
+	if err == nil {
+		o.Object = varPipelineStepStateCompletedResult.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepStateCompletedResult struct {

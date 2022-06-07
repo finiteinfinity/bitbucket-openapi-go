@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DeploymentStateUndeployed struct for DeploymentStateUndeployed
@@ -22,7 +24,10 @@ type DeploymentStateUndeployed struct {
 	Name *string `json:"name,omitempty"`
 	// Link to trigger the deployment.
 	TriggerUrl *string `json:"trigger_url,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateUndeployed DeploymentStateUndeployed
 
 // NewDeploymentStateUndeployed instantiates a new DeploymentStateUndeployed object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +126,71 @@ func (o DeploymentStateUndeployed) MarshalJSON() ([]byte, error) {
 	if o.TriggerUrl != nil {
 		toSerialize["trigger_url"] = o.TriggerUrl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateUndeployed) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentStateUndeployedWithoutEmbeddedStruct struct {
+		// The name of deployment state (UNDEPLOYED).
+		Name *string `json:"name,omitempty"`
+		// Link to trigger the deployment.
+		TriggerUrl *string `json:"trigger_url,omitempty"`
+	}
+
+	varDeploymentStateUndeployedWithoutEmbeddedStruct := DeploymentStateUndeployedWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateUndeployedWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentStateUndeployed := _DeploymentStateUndeployed{}
+		varDeploymentStateUndeployed.Name = varDeploymentStateUndeployedWithoutEmbeddedStruct.Name
+		varDeploymentStateUndeployed.TriggerUrl = varDeploymentStateUndeployedWithoutEmbeddedStruct.TriggerUrl
+		*o = DeploymentStateUndeployed(varDeploymentStateUndeployed)
+	} else {
+		return err
+	}
+
+	varDeploymentStateUndeployed := _DeploymentStateUndeployed{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateUndeployed)
+	if err == nil {
+		o.DeploymentState = varDeploymentStateUndeployed.DeploymentState
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "trigger_url")
+
+		// remove fields from embedded structs
+		reflectDeploymentState := reflect.ValueOf(o.DeploymentState)
+		for i := 0; i < reflectDeploymentState.Type().NumField(); i++ {
+			t := reflectDeploymentState.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateUndeployed struct {

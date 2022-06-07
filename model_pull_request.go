@@ -48,7 +48,10 @@ type PullRequest struct {
 	Reviewers []Account `json:"reviewers,omitempty"`
 	//         The list of users that are collaborating on this pull request.         Collaborators are user that:          * are added to the pull request as a reviewer (part of the reviewers           list)         * are not explicit reviewers, but have commented on the pull request         * are not explicit reviewers, but have approved the pull request          Each user is wrapped in an object that indicates the user's role and         whether they have approved the pull request. For performance reasons,         the API only returns this list when an API requests a pull request by         id.         
 	Participants []Participant `json:"participants,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullRequest PullRequest
 
 // NewPullRequest instantiates a new PullRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -734,7 +737,47 @@ func (o PullRequest) MarshalJSON() ([]byte, error) {
 	if o.Participants != nil {
 		toSerialize["participants"] = o.Participants
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullRequest) UnmarshalJSON(bytes []byte) (err error) {
+	varPullRequest := _PullRequest{}
+
+	if err = json.Unmarshal(bytes, &varPullRequest); err == nil {
+		*o = PullRequest(varPullRequest)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "rendered")
+		delete(additionalProperties, "summary")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "author")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "destination")
+		delete(additionalProperties, "merge_commit")
+		delete(additionalProperties, "comment_count")
+		delete(additionalProperties, "task_count")
+		delete(additionalProperties, "close_source_branch")
+		delete(additionalProperties, "closed_by")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "reviewers")
+		delete(additionalProperties, "participants")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullRequest struct {

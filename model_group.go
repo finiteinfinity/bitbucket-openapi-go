@@ -25,7 +25,10 @@ type Group struct {
 	Slug *string `json:"slug,omitempty"`
 	// The concatenation of the workspace's slug and the group's slug, separated with a colon (e.g. `acme:developers`) 
 	FullSlug *string `json:"full_slug,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Group Group
 
 // NewGroup instantiates a new Group object
 // This constructor will assign default values to properties that have it defined,
@@ -256,7 +259,34 @@ func (o Group) MarshalJSON() ([]byte, error) {
 	if o.FullSlug != nil {
 		toSerialize["full_slug"] = o.FullSlug
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Group) UnmarshalJSON(bytes []byte) (err error) {
+	varGroup := _Group{}
+
+	if err = json.Unmarshal(bytes, &varGroup); err == nil {
+		*o = Group(varGroup)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "owner")
+		delete(additionalProperties, "workspace")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "slug")
+		delete(additionalProperties, "full_slug")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGroup struct {

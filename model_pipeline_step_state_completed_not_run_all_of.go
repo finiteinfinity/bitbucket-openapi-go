@@ -19,7 +19,10 @@ import (
 type PipelineStepStateCompletedNotRunAllOf struct {
 	// The name of the result (NOT_RUN)
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepStateCompletedNotRunAllOf PipelineStepStateCompletedNotRunAllOf
 
 // NewPipelineStepStateCompletedNotRunAllOf instantiates a new PipelineStepStateCompletedNotRunAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineStepStateCompletedNotRunAllOf) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepStateCompletedNotRunAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStepStateCompletedNotRunAllOf := _PipelineStepStateCompletedNotRunAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStepStateCompletedNotRunAllOf); err == nil {
+		*o = PipelineStepStateCompletedNotRunAllOf(varPipelineStepStateCompletedNotRunAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepStateCompletedNotRunAllOf struct {

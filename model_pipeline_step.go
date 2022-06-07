@@ -30,7 +30,10 @@ type PipelineStep struct {
 	SetupCommands []PipelineCommand `json:"setup_commands,omitempty"`
 	// The list of build commands. These commands are executed in the build container.
 	ScriptCommands []PipelineCommand `json:"script_commands,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStep PipelineStep
 
 // NewPipelineStep instantiates a new PipelineStep object
 // This constructor will assign default values to properties that have it defined,
@@ -296,7 +299,35 @@ func (o PipelineStep) MarshalJSON() ([]byte, error) {
 	if o.ScriptCommands != nil {
 		toSerialize["script_commands"] = o.ScriptCommands
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStep) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStep := _PipelineStep{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStep); err == nil {
+		*o = PipelineStep(varPipelineStep)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "started_on")
+		delete(additionalProperties, "completed_on")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "image")
+		delete(additionalProperties, "setup_commands")
+		delete(additionalProperties, "script_commands")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStep struct {

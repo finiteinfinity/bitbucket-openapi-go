@@ -19,7 +19,10 @@ import (
 type PipelineStepStateCompletedStoppedAllOf struct {
 	// The name of the result (STOPPED)
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepStateCompletedStoppedAllOf PipelineStepStateCompletedStoppedAllOf
 
 // NewPipelineStepStateCompletedStoppedAllOf instantiates a new PipelineStepStateCompletedStoppedAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineStepStateCompletedStoppedAllOf) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepStateCompletedStoppedAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStepStateCompletedStoppedAllOf := _PipelineStepStateCompletedStoppedAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStepStateCompletedStoppedAllOf); err == nil {
+		*o = PipelineStepStateCompletedStoppedAllOf(varPipelineStepStateCompletedStoppedAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepStateCompletedStoppedAllOf struct {

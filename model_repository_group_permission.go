@@ -22,7 +22,10 @@ type RepositoryGroupPermission struct {
 	Permission *string `json:"permission,omitempty"`
 	Group *Group `json:"group,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RepositoryGroupPermission RepositoryGroupPermission
 
 // NewRepositoryGroupPermission instantiates a new RepositoryGroupPermission object
 // This constructor will assign default values to properties that have it defined,
@@ -210,7 +213,33 @@ func (o RepositoryGroupPermission) MarshalJSON() ([]byte, error) {
 	if o.Repository != nil {
 		toSerialize["repository"] = o.Repository
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RepositoryGroupPermission) UnmarshalJSON(bytes []byte) (err error) {
+	varRepositoryGroupPermission := _RepositoryGroupPermission{}
+
+	if err = json.Unmarshal(bytes, &varRepositoryGroupPermission); err == nil {
+		*o = RepositoryGroupPermission(varRepositoryGroupPermission)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "permission")
+		delete(additionalProperties, "group")
+		delete(additionalProperties, "repository")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRepositoryGroupPermission struct {

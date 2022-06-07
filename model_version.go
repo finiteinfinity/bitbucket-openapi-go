@@ -20,7 +20,10 @@ type Version struct {
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
 	Name *string `json:"name,omitempty"`
 	Id *int32 `json:"id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Version Version
 
 // NewVersion instantiates a new Version object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o Version) MarshalJSON() ([]byte, error) {
 	if o.Id != nil {
 		toSerialize["id"] = o.Id
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Version) UnmarshalJSON(bytes []byte) (err error) {
+	varVersion := _Version{}
+
+	if err = json.Unmarshal(bytes, &varVersion); err == nil {
+		*o = Version(varVersion)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableVersion struct {

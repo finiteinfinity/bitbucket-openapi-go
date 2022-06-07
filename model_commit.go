@@ -19,7 +19,10 @@ import (
 type Commit struct {
 	Repository *Repository `json:"repository,omitempty"`
 	Participants []Participant `json:"participants,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Commit Commit
 
 // NewCommit instantiates a new Commit object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o Commit) MarshalJSON() ([]byte, error) {
 	if o.Participants != nil {
 		toSerialize["participants"] = o.Participants
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Commit) UnmarshalJSON(bytes []byte) (err error) {
+	varCommit := _Commit{}
+
+	if err = json.Unmarshal(bytes, &varCommit); err == nil {
+		*o = Commit(varCommit)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "participants")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommit struct {

@@ -35,7 +35,10 @@ type Issue struct {
 	Component *Component `json:"component,omitempty"`
 	Votes *int32 `json:"votes,omitempty"`
 	Content *RenderedPullRequestMarkupTitle `json:"content,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Issue Issue
 
 // NewIssue instantiates a new Issue object
 // This constructor will assign default values to properties that have it defined,
@@ -651,7 +654,45 @@ func (o Issue) MarshalJSON() ([]byte, error) {
 	if o.Content != nil {
 		toSerialize["content"] = o.Content
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Issue) UnmarshalJSON(bytes []byte) (err error) {
+	varIssue := _Issue{}
+
+	if err = json.Unmarshal(bytes, &varIssue); err == nil {
+		*o = Issue(varIssue)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "reporter")
+		delete(additionalProperties, "assignee")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "edited_on")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "milestone")
+		delete(additionalProperties, "version")
+		delete(additionalProperties, "component")
+		delete(additionalProperties, "votes")
+		delete(additionalProperties, "content")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssue struct {

@@ -19,7 +19,10 @@ import (
 type IssueChangeChangesAssignee struct {
 	Old *string `json:"old,omitempty"`
 	New *string `json:"new,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueChangeChangesAssignee IssueChangeChangesAssignee
 
 // NewIssueChangeChangesAssignee instantiates a new IssueChangeChangesAssignee object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o IssueChangeChangesAssignee) MarshalJSON() ([]byte, error) {
 	if o.New != nil {
 		toSerialize["new"] = o.New
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueChangeChangesAssignee) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueChangeChangesAssignee := _IssueChangeChangesAssignee{}
+
+	if err = json.Unmarshal(bytes, &varIssueChangeChangesAssignee); err == nil {
+		*o = IssueChangeChangesAssignee(varIssueChangeChangesAssignee)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "old")
+		delete(additionalProperties, "new")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueChangeChangesAssignee struct {

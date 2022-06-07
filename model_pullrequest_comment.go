@@ -13,13 +13,18 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PullrequestComment struct for PullrequestComment
 type PullrequestComment struct {
 	Comment
 	Pullrequest *Pullrequest `json:"pullrequest,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullrequestComment PullrequestComment
 
 // NewPullrequestComment instantiates a new PullrequestComment object
 // This constructor will assign default values to properties that have it defined,
@@ -83,7 +88,66 @@ func (o PullrequestComment) MarshalJSON() ([]byte, error) {
 	if o.Pullrequest != nil {
 		toSerialize["pullrequest"] = o.Pullrequest
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullrequestComment) UnmarshalJSON(bytes []byte) (err error) {
+	type PullrequestCommentWithoutEmbeddedStruct struct {
+		Pullrequest *Pullrequest `json:"pullrequest,omitempty"`
+	}
+
+	varPullrequestCommentWithoutEmbeddedStruct := PullrequestCommentWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPullrequestCommentWithoutEmbeddedStruct)
+	if err == nil {
+		varPullrequestComment := _PullrequestComment{}
+		varPullrequestComment.Pullrequest = varPullrequestCommentWithoutEmbeddedStruct.Pullrequest
+		*o = PullrequestComment(varPullrequestComment)
+	} else {
+		return err
+	}
+
+	varPullrequestComment := _PullrequestComment{}
+
+	err = json.Unmarshal(bytes, &varPullrequestComment)
+	if err == nil {
+		o.Comment = varPullrequestComment.Comment
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "pullrequest")
+
+		// remove fields from embedded structs
+		reflectComment := reflect.ValueOf(o.Comment)
+		for i := 0; i < reflectComment.Type().NumField(); i++ {
+			t := reflectComment.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullrequestComment struct {

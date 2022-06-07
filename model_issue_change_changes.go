@@ -26,7 +26,10 @@ type IssueChangeChanges struct {
 	Priority *IssueChangeChangesAssignee `json:"priority,omitempty"`
 	Version *IssueChangeChangesAssignee `json:"version,omitempty"`
 	Content *IssueChangeChangesAssignee `json:"content,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueChangeChanges IssueChangeChanges
 
 // NewIssueChangeChanges instantiates a new IssueChangeChanges object
 // This constructor will assign default values to properties that have it defined,
@@ -362,7 +365,37 @@ func (o IssueChangeChanges) MarshalJSON() ([]byte, error) {
 	if o.Content != nil {
 		toSerialize["content"] = o.Content
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueChangeChanges) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueChangeChanges := _IssueChangeChanges{}
+
+	if err = json.Unmarshal(bytes, &varIssueChangeChanges); err == nil {
+		*o = IssueChangeChanges(varIssueChangeChanges)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "assignee")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "milestone")
+		delete(additionalProperties, "component")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "version")
+		delete(additionalProperties, "content")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueChangeChanges struct {

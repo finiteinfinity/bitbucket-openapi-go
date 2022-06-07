@@ -20,7 +20,10 @@ type PipelinesConfiguration struct {
 	// Whether Pipelines is enabled for the repository.
 	Enabled *bool `json:"enabled,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelinesConfiguration PipelinesConfiguration
 
 // NewPipelinesConfiguration instantiates a new PipelinesConfiguration object
 // This constructor will assign default values to properties that have it defined,
@@ -111,7 +114,30 @@ func (o PipelinesConfiguration) MarshalJSON() ([]byte, error) {
 	if o.Repository != nil {
 		toSerialize["repository"] = o.Repository
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelinesConfiguration) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelinesConfiguration := _PipelinesConfiguration{}
+
+	if err = json.Unmarshal(bytes, &varPipelinesConfiguration); err == nil {
+		*o = PipelinesConfiguration(varPipelinesConfiguration)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "repository")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelinesConfiguration struct {

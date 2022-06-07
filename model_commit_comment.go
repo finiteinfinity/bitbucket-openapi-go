@@ -18,7 +18,10 @@ import (
 // CommitComment A commit comment.
 type CommitComment struct {
 	Commit *Commit `json:"commit,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommitComment CommitComment
 
 // NewCommitComment instantiates a new CommitComment object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o CommitComment) MarshalJSON() ([]byte, error) {
 	if o.Commit != nil {
 		toSerialize["commit"] = o.Commit
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommitComment) UnmarshalJSON(bytes []byte) (err error) {
+	varCommitComment := _CommitComment{}
+
+	if err = json.Unmarshal(bytes, &varCommitComment); err == nil {
+		*o = CommitComment(varCommitComment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "commit")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitComment struct {

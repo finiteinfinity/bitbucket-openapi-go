@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStateInProgressStage struct for PipelineStateInProgressStage
 type PipelineStateInProgressStage struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStateInProgressStage PipelineStateInProgressStage
 
 // NewPipelineStateInProgressStage instantiates a new PipelineStateInProgressStage object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineStateInProgressStage) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStateInProgressStage) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStateInProgressStageWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineStateInProgressStageWithoutEmbeddedStruct := PipelineStateInProgressStageWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateInProgressStageWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStateInProgressStage := _PipelineStateInProgressStage{}
+		*o = PipelineStateInProgressStage(varPipelineStateInProgressStage)
+	} else {
+		return err
+	}
+
+	varPipelineStateInProgressStage := _PipelineStateInProgressStage{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateInProgressStage)
+	if err == nil {
+		o.Object = varPipelineStateInProgressStage.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStateInProgressStage struct {

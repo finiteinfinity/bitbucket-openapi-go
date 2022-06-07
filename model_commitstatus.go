@@ -14,6 +14,8 @@ package bitbucket
 import (
 	"encoding/json"
 	"time"
+	"reflect"
+	"strings"
 )
 
 // Commitstatus struct for Commitstatus
@@ -36,7 +38,10 @@ type Commitstatus struct {
 	Description *string `json:"description,omitempty"`
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Commitstatus Commitstatus
 
 // NewCommitstatus instantiates a new Commitstatus object
 // This constructor will assign default values to properties that have it defined,
@@ -415,7 +420,100 @@ func (o Commitstatus) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Commitstatus) UnmarshalJSON(bytes []byte) (err error) {
+	type CommitstatusWithoutEmbeddedStruct struct {
+		Links *CommitStatusLinks `json:"links,omitempty"`
+		// The commit status' id.
+		Uuid *string `json:"uuid,omitempty"`
+		// An identifier for the status that's unique to         its type (current \"build\" is the only supported type) and the vendor,         e.g. BB-DEPLOY
+		Key *string `json:"key,omitempty"`
+		//  The name of the ref that pointed to this commit at the time the status object was created. Note that this the ref may since have moved off of the commit. This optional field can be useful for build systems whose build triggers and configuration are branch-dependent (e.g. a Pipeline build). It is legitimate for this field to not be set, or even apply (e.g. a static linting job).
+		Refname *string `json:"refname,omitempty"`
+		// A URL linking back to the vendor or build system, for providing more information about whatever process produced this status. Accepts context variables `repository` and `commit` that Bitbucket will evaluate at runtime whenever at runtime. For example, one could use https://foo.com/builds/{repository.full_name} which Bitbucket will turn into https://foo.com/builds/foo/bar at render time.
+		Url *string `json:"url,omitempty"`
+		// Provides some indication of the status of this commit
+		State *string `json:"state,omitempty"`
+		// An identifier for the build itself, e.g. BB-DEPLOY-1
+		Name *string `json:"name,omitempty"`
+		// A description of the build (e.g. \"Unit tests in Bamboo\")
+		Description *string `json:"description,omitempty"`
+		CreatedOn *time.Time `json:"created_on,omitempty"`
+		UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	}
+
+	varCommitstatusWithoutEmbeddedStruct := CommitstatusWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varCommitstatusWithoutEmbeddedStruct)
+	if err == nil {
+		varCommitstatus := _Commitstatus{}
+		varCommitstatus.Links = varCommitstatusWithoutEmbeddedStruct.Links
+		varCommitstatus.Uuid = varCommitstatusWithoutEmbeddedStruct.Uuid
+		varCommitstatus.Key = varCommitstatusWithoutEmbeddedStruct.Key
+		varCommitstatus.Refname = varCommitstatusWithoutEmbeddedStruct.Refname
+		varCommitstatus.Url = varCommitstatusWithoutEmbeddedStruct.Url
+		varCommitstatus.State = varCommitstatusWithoutEmbeddedStruct.State
+		varCommitstatus.Name = varCommitstatusWithoutEmbeddedStruct.Name
+		varCommitstatus.Description = varCommitstatusWithoutEmbeddedStruct.Description
+		varCommitstatus.CreatedOn = varCommitstatusWithoutEmbeddedStruct.CreatedOn
+		varCommitstatus.UpdatedOn = varCommitstatusWithoutEmbeddedStruct.UpdatedOn
+		*o = Commitstatus(varCommitstatus)
+	} else {
+		return err
+	}
+
+	varCommitstatus := _Commitstatus{}
+
+	err = json.Unmarshal(bytes, &varCommitstatus)
+	if err == nil {
+		o.Object = varCommitstatus.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "refname")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitstatus struct {

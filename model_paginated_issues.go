@@ -28,7 +28,10 @@ type PaginatedIssues struct {
 	// Link to previous page if it exists. A collections first page does not have this value. This is an optional element that is not provided in all responses. Some result sets strictly support forward navigation and never provide previous links. Clients must anticipate that backwards navigation is not always available. Use this link to navigate the result set and refrain from constructing your own URLs.
 	Previous *string `json:"previous,omitempty"`
 	Values []Issue `json:"values,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PaginatedIssues PaginatedIssues
 
 // NewPaginatedIssues instantiates a new PaginatedIssues object
 // This constructor will assign default values to properties that have it defined,
@@ -259,7 +262,34 @@ func (o PaginatedIssues) MarshalJSON() ([]byte, error) {
 	if o.Values != nil {
 		toSerialize["values"] = o.Values
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PaginatedIssues) UnmarshalJSON(bytes []byte) (err error) {
+	varPaginatedIssues := _PaginatedIssues{}
+
+	if err = json.Unmarshal(bytes, &varPaginatedIssues); err == nil {
+		*o = PaginatedIssues(varPaginatedIssues)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "page")
+		delete(additionalProperties, "pagelen")
+		delete(additionalProperties, "next")
+		delete(additionalProperties, "previous")
+		delete(additionalProperties, "values")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePaginatedIssues struct {

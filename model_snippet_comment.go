@@ -19,7 +19,10 @@ import (
 type SnippetComment struct {
 	Links *GroupLinks `json:"links,omitempty"`
 	Snippet *Snippet `json:"snippet,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SnippetComment SnippetComment
 
 // NewSnippetComment instantiates a new SnippetComment object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o SnippetComment) MarshalJSON() ([]byte, error) {
 	if o.Snippet != nil {
 		toSerialize["snippet"] = o.Snippet
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SnippetComment) UnmarshalJSON(bytes []byte) (err error) {
+	varSnippetComment := _SnippetComment{}
+
+	if err = json.Unmarshal(bytes, &varSnippetComment); err == nil {
+		*o = SnippetComment(varSnippetComment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "snippet")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSnippetComment struct {

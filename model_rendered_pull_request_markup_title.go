@@ -23,7 +23,10 @@ type RenderedPullRequestMarkupTitle struct {
 	Markup *string `json:"markup,omitempty"`
 	// The user's content rendered as HTML.
 	Html *string `json:"html,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RenderedPullRequestMarkupTitle RenderedPullRequestMarkupTitle
 
 // NewRenderedPullRequestMarkupTitle instantiates a new RenderedPullRequestMarkupTitle object
 // This constructor will assign default values to properties that have it defined,
@@ -149,7 +152,31 @@ func (o RenderedPullRequestMarkupTitle) MarshalJSON() ([]byte, error) {
 	if o.Html != nil {
 		toSerialize["html"] = o.Html
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RenderedPullRequestMarkupTitle) UnmarshalJSON(bytes []byte) (err error) {
+	varRenderedPullRequestMarkupTitle := _RenderedPullRequestMarkupTitle{}
+
+	if err = json.Unmarshal(bytes, &varRenderedPullRequestMarkupTitle); err == nil {
+		*o = RenderedPullRequestMarkupTitle(varRenderedPullRequestMarkupTitle)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "raw")
+		delete(additionalProperties, "markup")
+		delete(additionalProperties, "html")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRenderedPullRequestMarkupTitle struct {

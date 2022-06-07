@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DeploymentStateCompletedStatusFailed struct for DeploymentStateCompletedStatusFailed
@@ -20,7 +22,10 @@ type DeploymentStateCompletedStatusFailed struct {
 	DeploymentStateCompletedStatus
 	// The name of the completed deployment status (FAILED).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateCompletedStatusFailed DeploymentStateCompletedStatusFailed
 
 // NewDeploymentStateCompletedStatusFailed instantiates a new DeploymentStateCompletedStatusFailed object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +89,67 @@ func (o DeploymentStateCompletedStatusFailed) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateCompletedStatusFailed) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentStateCompletedStatusFailedWithoutEmbeddedStruct struct {
+		// The name of the completed deployment status (FAILED).
+		Name *string `json:"name,omitempty"`
+	}
+
+	varDeploymentStateCompletedStatusFailedWithoutEmbeddedStruct := DeploymentStateCompletedStatusFailedWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateCompletedStatusFailedWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentStateCompletedStatusFailed := _DeploymentStateCompletedStatusFailed{}
+		varDeploymentStateCompletedStatusFailed.Name = varDeploymentStateCompletedStatusFailedWithoutEmbeddedStruct.Name
+		*o = DeploymentStateCompletedStatusFailed(varDeploymentStateCompletedStatusFailed)
+	} else {
+		return err
+	}
+
+	varDeploymentStateCompletedStatusFailed := _DeploymentStateCompletedStatusFailed{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateCompletedStatusFailed)
+	if err == nil {
+		o.DeploymentStateCompletedStatus = varDeploymentStateCompletedStatusFailed.DeploymentStateCompletedStatus
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectDeploymentStateCompletedStatus := reflect.ValueOf(o.DeploymentStateCompletedStatus)
+		for i := 0; i < reflectDeploymentStateCompletedStatus.Type().NumField(); i++ {
+			t := reflectDeploymentStateCompletedStatus.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateCompletedStatusFailed struct {

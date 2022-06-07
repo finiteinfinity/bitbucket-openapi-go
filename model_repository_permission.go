@@ -21,7 +21,10 @@ type RepositoryPermission struct {
 	Permission *string `json:"permission,omitempty"`
 	User *User `json:"user,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RepositoryPermission RepositoryPermission
 
 // NewRepositoryPermission instantiates a new RepositoryPermission object
 // This constructor will assign default values to properties that have it defined,
@@ -174,7 +177,32 @@ func (o RepositoryPermission) MarshalJSON() ([]byte, error) {
 	if o.Repository != nil {
 		toSerialize["repository"] = o.Repository
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RepositoryPermission) UnmarshalJSON(bytes []byte) (err error) {
+	varRepositoryPermission := _RepositoryPermission{}
+
+	if err = json.Unmarshal(bytes, &varRepositoryPermission); err == nil {
+		*o = RepositoryPermission(varRepositoryPermission)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "permission")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "repository")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRepositoryPermission struct {

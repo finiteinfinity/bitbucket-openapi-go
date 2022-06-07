@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStateCompletedSuccessful struct for PipelineStateCompletedSuccessful
@@ -20,7 +22,10 @@ type PipelineStateCompletedSuccessful struct {
 	PipelineStateCompletedResult
 	// The name of the successful result (SUCCESSFUL).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStateCompletedSuccessful PipelineStateCompletedSuccessful
 
 // NewPipelineStateCompletedSuccessful instantiates a new PipelineStateCompletedSuccessful object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +89,67 @@ func (o PipelineStateCompletedSuccessful) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStateCompletedSuccessful) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStateCompletedSuccessfulWithoutEmbeddedStruct struct {
+		// The name of the successful result (SUCCESSFUL).
+		Name *string `json:"name,omitempty"`
+	}
+
+	varPipelineStateCompletedSuccessfulWithoutEmbeddedStruct := PipelineStateCompletedSuccessfulWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateCompletedSuccessfulWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStateCompletedSuccessful := _PipelineStateCompletedSuccessful{}
+		varPipelineStateCompletedSuccessful.Name = varPipelineStateCompletedSuccessfulWithoutEmbeddedStruct.Name
+		*o = PipelineStateCompletedSuccessful(varPipelineStateCompletedSuccessful)
+	} else {
+		return err
+	}
+
+	varPipelineStateCompletedSuccessful := _PipelineStateCompletedSuccessful{}
+
+	err = json.Unmarshal(bytes, &varPipelineStateCompletedSuccessful)
+	if err == nil {
+		o.PipelineStateCompletedResult = varPipelineStateCompletedSuccessful.PipelineStateCompletedResult
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectPipelineStateCompletedResult := reflect.ValueOf(o.PipelineStateCompletedResult)
+		for i := 0; i < reflectPipelineStateCompletedResult.Type().NumField(); i++ {
+			t := reflectPipelineStateCompletedResult.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStateCompletedSuccessful struct {

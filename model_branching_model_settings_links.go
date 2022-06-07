@@ -18,7 +18,10 @@ import (
 // BranchingModelSettingsLinks struct for BranchingModelSettingsLinks
 type BranchingModelSettingsLinks struct {
 	Self *Link `json:"self,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelSettingsLinks BranchingModelSettingsLinks
 
 // NewBranchingModelSettingsLinks instantiates a new BranchingModelSettingsLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o BranchingModelSettingsLinks) MarshalJSON() ([]byte, error) {
 	if o.Self != nil {
 		toSerialize["self"] = o.Self
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelSettingsLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelSettingsLinks := _BranchingModelSettingsLinks{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelSettingsLinks); err == nil {
+		*o = BranchingModelSettingsLinks(varBranchingModelSettingsLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelSettingsLinks struct {

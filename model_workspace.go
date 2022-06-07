@@ -29,7 +29,10 @@ type Workspace struct {
 	IsPrivate *bool `json:"is_private,omitempty"`
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Workspace Workspace
 
 // NewWorkspace instantiates a new Workspace object
 // This constructor will assign default values to properties that have it defined,
@@ -295,7 +298,35 @@ func (o Workspace) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Workspace) UnmarshalJSON(bytes []byte) (err error) {
+	varWorkspace := _Workspace{}
+
+	if err = json.Unmarshal(bytes, &varWorkspace); err == nil {
+		*o = Workspace(varWorkspace)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "slug")
+		delete(additionalProperties, "is_private")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableWorkspace struct {

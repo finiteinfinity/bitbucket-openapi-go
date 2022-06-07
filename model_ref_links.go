@@ -20,7 +20,10 @@ type RefLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Commits *Link `json:"commits,omitempty"`
 	Html *Link `json:"html,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RefLinks RefLinks
 
 // NewRefLinks instantiates a new RefLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o RefLinks) MarshalJSON() ([]byte, error) {
 	if o.Html != nil {
 		toSerialize["html"] = o.Html
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *RefLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varRefLinks := _RefLinks{}
+
+	if err = json.Unmarshal(bytes, &varRefLinks); err == nil {
+		*o = RefLinks(varRefLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "commits")
+		delete(additionalProperties, "html")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRefLinks struct {

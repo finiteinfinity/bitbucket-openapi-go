@@ -19,7 +19,10 @@ import (
 type DeploymentStateCompletedStatusSuccessfulAllOf struct {
 	// The name of the completed deployment status (SUCCESSFUL).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateCompletedStatusSuccessfulAllOf DeploymentStateCompletedStatusSuccessfulAllOf
 
 // NewDeploymentStateCompletedStatusSuccessfulAllOf instantiates a new DeploymentStateCompletedStatusSuccessfulAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o DeploymentStateCompletedStatusSuccessfulAllOf) MarshalJSON() ([]byte, er
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateCompletedStatusSuccessfulAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentStateCompletedStatusSuccessfulAllOf := _DeploymentStateCompletedStatusSuccessfulAllOf{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentStateCompletedStatusSuccessfulAllOf); err == nil {
+		*o = DeploymentStateCompletedStatusSuccessfulAllOf(varDeploymentStateCompletedStatusSuccessfulAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateCompletedStatusSuccessfulAllOf struct {

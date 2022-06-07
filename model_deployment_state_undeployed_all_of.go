@@ -21,7 +21,10 @@ type DeploymentStateUndeployedAllOf struct {
 	Name *string `json:"name,omitempty"`
 	// Link to trigger the deployment.
 	TriggerUrl *string `json:"trigger_url,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateUndeployedAllOf DeploymentStateUndeployedAllOf
 
 // NewDeploymentStateUndeployedAllOf instantiates a new DeploymentStateUndeployedAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o DeploymentStateUndeployedAllOf) MarshalJSON() ([]byte, error) {
 	if o.TriggerUrl != nil {
 		toSerialize["trigger_url"] = o.TriggerUrl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateUndeployedAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentStateUndeployedAllOf := _DeploymentStateUndeployedAllOf{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentStateUndeployedAllOf); err == nil {
+		*o = DeploymentStateUndeployedAllOf(varDeploymentStateUndeployedAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "trigger_url")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateUndeployedAllOf struct {

@@ -21,7 +21,10 @@ type PipelineSelector struct {
 	Type *string `json:"type,omitempty"`
 	// The name of the matching pipeline definition.
 	Pattern *string `json:"pattern,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineSelector PipelineSelector
 
 // NewPipelineSelector instantiates a new PipelineSelector object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o PipelineSelector) MarshalJSON() ([]byte, error) {
 	if o.Pattern != nil {
 		toSerialize["pattern"] = o.Pattern
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineSelector) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineSelector := _PipelineSelector{}
+
+	if err = json.Unmarshal(bytes, &varPipelineSelector); err == nil {
+		*o = PipelineSelector(varPipelineSelector)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "pattern")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineSelector struct {

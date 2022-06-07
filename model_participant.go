@@ -24,7 +24,10 @@ type Participant struct {
 	State *string `json:"state,omitempty"`
 	// The ISO8601 timestamp of the participant's action. For approvers, this is the time of their approval. For commenters and pull request reviewers who are not approvers, this is the time they last commented, or null if they have not commented.
 	ParticipatedOn *time.Time `json:"participated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Participant Participant
 
 // NewParticipant instantiates a new Participant object
 // This constructor will assign default values to properties that have it defined,
@@ -220,7 +223,33 @@ func (o Participant) MarshalJSON() ([]byte, error) {
 	if o.ParticipatedOn != nil {
 		toSerialize["participated_on"] = o.ParticipatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Participant) UnmarshalJSON(bytes []byte) (err error) {
+	varParticipant := _Participant{}
+
+	if err = json.Unmarshal(bytes, &varParticipant); err == nil {
+		*o = Participant(varParticipant)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "approved")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "participated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableParticipant struct {

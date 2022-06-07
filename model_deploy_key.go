@@ -29,7 +29,10 @@ type DeployKey struct {
 	LastUsed *time.Time `json:"last_used,omitempty"`
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
 	Owner *Account `json:"owner,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeployKey DeployKey
 
 // NewDeployKey instantiates a new DeployKey object
 // This constructor will assign default values to properties that have it defined,
@@ -330,7 +333,36 @@ func (o DeployKey) MarshalJSON() ([]byte, error) {
 	if o.Owner != nil {
 		toSerialize["owner"] = o.Owner
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeployKey) UnmarshalJSON(bytes []byte) (err error) {
+	varDeployKey := _DeployKey{}
+
+	if err = json.Unmarshal(bytes, &varDeployKey); err == nil {
+		*o = DeployKey(varDeployKey)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "label")
+		delete(additionalProperties, "added_on")
+		delete(additionalProperties, "last_used")
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "owner")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeployKey struct {

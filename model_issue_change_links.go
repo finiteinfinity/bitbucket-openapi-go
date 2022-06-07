@@ -19,7 +19,10 @@ import (
 type IssueChangeLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Issue *Link `json:"issue,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueChangeLinks IssueChangeLinks
 
 // NewIssueChangeLinks instantiates a new IssueChangeLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o IssueChangeLinks) MarshalJSON() ([]byte, error) {
 	if o.Issue != nil {
 		toSerialize["issue"] = o.Issue
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueChangeLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueChangeLinks := _IssueChangeLinks{}
+
+	if err = json.Unmarshal(bytes, &varIssueChangeLinks); err == nil {
+		*o = IssueChangeLinks(varIssueChangeLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "issue")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueChangeLinks struct {

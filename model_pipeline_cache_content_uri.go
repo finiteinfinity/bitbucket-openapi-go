@@ -19,7 +19,10 @@ import (
 type PipelineCacheContentUri struct {
 	// The uri for pipeline cache content.
 	Uri *string `json:"uri,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineCacheContentUri PipelineCacheContentUri
 
 // NewPipelineCacheContentUri instantiates a new PipelineCacheContentUri object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineCacheContentUri) MarshalJSON() ([]byte, error) {
 	if o.Uri != nil {
 		toSerialize["uri"] = o.Uri
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineCacheContentUri) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineCacheContentUri := _PipelineCacheContentUri{}
+
+	if err = json.Unmarshal(bytes, &varPipelineCacheContentUri); err == nil {
+		*o = PipelineCacheContentUri(varPipelineCacheContentUri)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uri")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineCacheContentUri struct {

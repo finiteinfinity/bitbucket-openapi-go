@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DdevReport struct for DdevReport
 type DdevReport struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _DdevReport DdevReport
 
 // NewDdevReport instantiates a new DdevReport object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o DdevReport) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DdevReport) UnmarshalJSON(bytes []byte) (err error) {
+	type DdevReportWithoutEmbeddedStruct struct {
+	}
+
+	varDdevReportWithoutEmbeddedStruct := DdevReportWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDdevReportWithoutEmbeddedStruct)
+	if err == nil {
+		varDdevReport := _DdevReport{}
+		*o = DdevReport(varDdevReport)
+	} else {
+		return err
+	}
+
+	varDdevReport := _DdevReport{}
+
+	err = json.Unmarshal(bytes, &varDdevReport)
+	if err == nil {
+		o.Object = varDdevReport.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDdevReport struct {

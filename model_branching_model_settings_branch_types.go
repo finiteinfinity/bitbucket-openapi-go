@@ -23,7 +23,10 @@ type BranchingModelSettingsBranchTypes struct {
 	Kind string `json:"kind"`
 	// The prefix for this branch type. A branch with this prefix will be classified as per `kind`. The `prefix` of an enabled branch type must be a valid branch prefix.Additionally, it cannot be blank, empty or `null`. The `prefix` for a disabled branch type can be empty or invalid.
 	Prefix *string `json:"prefix,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelSettingsBranchTypes BranchingModelSettingsBranchTypes
 
 // NewBranchingModelSettingsBranchTypes instantiates a new BranchingModelSettingsBranchTypes object
 // This constructor will assign default values to properties that have it defined,
@@ -142,7 +145,31 @@ func (o BranchingModelSettingsBranchTypes) MarshalJSON() ([]byte, error) {
 	if o.Prefix != nil {
 		toSerialize["prefix"] = o.Prefix
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelSettingsBranchTypes) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelSettingsBranchTypes := _BranchingModelSettingsBranchTypes{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelSettingsBranchTypes); err == nil {
+		*o = BranchingModelSettingsBranchTypes(varBranchingModelSettingsBranchTypes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "prefix")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelSettingsBranchTypes struct {

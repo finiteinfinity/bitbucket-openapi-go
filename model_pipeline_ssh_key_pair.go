@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineSshKeyPair struct for PipelineSshKeyPair
@@ -22,7 +24,10 @@ type PipelineSshKeyPair struct {
 	PrivateKey *string `json:"private_key,omitempty"`
 	// The SSH public key.
 	PublicKey *string `json:"public_key,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineSshKeyPair PipelineSshKeyPair
 
 // NewPipelineSshKeyPair instantiates a new PipelineSshKeyPair object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +126,71 @@ func (o PipelineSshKeyPair) MarshalJSON() ([]byte, error) {
 	if o.PublicKey != nil {
 		toSerialize["public_key"] = o.PublicKey
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineSshKeyPair) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineSshKeyPairWithoutEmbeddedStruct struct {
+		// The SSH private key. This value will be empty when retrieving the SSH key pair.
+		PrivateKey *string `json:"private_key,omitempty"`
+		// The SSH public key.
+		PublicKey *string `json:"public_key,omitempty"`
+	}
+
+	varPipelineSshKeyPairWithoutEmbeddedStruct := PipelineSshKeyPairWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineSshKeyPairWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineSshKeyPair := _PipelineSshKeyPair{}
+		varPipelineSshKeyPair.PrivateKey = varPipelineSshKeyPairWithoutEmbeddedStruct.PrivateKey
+		varPipelineSshKeyPair.PublicKey = varPipelineSshKeyPairWithoutEmbeddedStruct.PublicKey
+		*o = PipelineSshKeyPair(varPipelineSshKeyPair)
+	} else {
+		return err
+	}
+
+	varPipelineSshKeyPair := _PipelineSshKeyPair{}
+
+	err = json.Unmarshal(bytes, &varPipelineSshKeyPair)
+	if err == nil {
+		o.Object = varPipelineSshKeyPair.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "private_key")
+		delete(additionalProperties, "public_key")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineSshKeyPair struct {

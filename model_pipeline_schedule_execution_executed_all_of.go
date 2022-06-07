@@ -18,7 +18,10 @@ import (
 // PipelineScheduleExecutionExecutedAllOf A Pipelines executed schedule execution.
 type PipelineScheduleExecutionExecutedAllOf struct {
 	Pipeline *Pipeline `json:"pipeline,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineScheduleExecutionExecutedAllOf PipelineScheduleExecutionExecutedAllOf
 
 // NewPipelineScheduleExecutionExecutedAllOf instantiates a new PipelineScheduleExecutionExecutedAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o PipelineScheduleExecutionExecutedAllOf) MarshalJSON() ([]byte, error) {
 	if o.Pipeline != nil {
 		toSerialize["pipeline"] = o.Pipeline
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineScheduleExecutionExecutedAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineScheduleExecutionExecutedAllOf := _PipelineScheduleExecutionExecutedAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineScheduleExecutionExecutedAllOf); err == nil {
+		*o = PipelineScheduleExecutionExecutedAllOf(varPipelineScheduleExecutionExecutedAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "pipeline")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineScheduleExecutionExecutedAllOf struct {

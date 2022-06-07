@@ -27,7 +27,10 @@ type PullRequestLinks struct {
 	Activity *Link `json:"activity,omitempty"`
 	Merge *Link `json:"merge,omitempty"`
 	Decline *Link `json:"decline,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PullRequestLinks PullRequestLinks
 
 // NewPullRequestLinks instantiates a new PullRequestLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -398,7 +401,38 @@ func (o PullRequestLinks) MarshalJSON() ([]byte, error) {
 	if o.Decline != nil {
 		toSerialize["decline"] = o.Decline
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PullRequestLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varPullRequestLinks := _PullRequestLinks{}
+
+	if err = json.Unmarshal(bytes, &varPullRequestLinks); err == nil {
+		*o = PullRequestLinks(varPullRequestLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "commits")
+		delete(additionalProperties, "approve")
+		delete(additionalProperties, "diff")
+		delete(additionalProperties, "diffstat")
+		delete(additionalProperties, "comments")
+		delete(additionalProperties, "activity")
+		delete(additionalProperties, "merge")
+		delete(additionalProperties, "decline")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePullRequestLinks struct {

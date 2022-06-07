@@ -14,6 +14,8 @@ package bitbucket
 import (
 	"encoding/json"
 	"time"
+	"reflect"
+	"strings"
 )
 
 // DeploymentStateInProgress struct for DeploymentStateInProgress
@@ -26,7 +28,10 @@ type DeploymentStateInProgress struct {
 	Deployer *Account `json:"deployer,omitempty"`
 	// The timestamp when the deployment was started.
 	StartDate *time.Time `json:"start_date,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateInProgress DeploymentStateInProgress
 
 // NewDeploymentStateInProgress instantiates a new DeploymentStateInProgress object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +200,78 @@ func (o DeploymentStateInProgress) MarshalJSON() ([]byte, error) {
 	if o.StartDate != nil {
 		toSerialize["start_date"] = o.StartDate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateInProgress) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentStateInProgressWithoutEmbeddedStruct struct {
+		// The name of deployment state (IN_PROGRESS).
+		Name *string `json:"name,omitempty"`
+		// Link to the deployment result.
+		Url *string `json:"url,omitempty"`
+		Deployer *Account `json:"deployer,omitempty"`
+		// The timestamp when the deployment was started.
+		StartDate *time.Time `json:"start_date,omitempty"`
+	}
+
+	varDeploymentStateInProgressWithoutEmbeddedStruct := DeploymentStateInProgressWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateInProgressWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentStateInProgress := _DeploymentStateInProgress{}
+		varDeploymentStateInProgress.Name = varDeploymentStateInProgressWithoutEmbeddedStruct.Name
+		varDeploymentStateInProgress.Url = varDeploymentStateInProgressWithoutEmbeddedStruct.Url
+		varDeploymentStateInProgress.Deployer = varDeploymentStateInProgressWithoutEmbeddedStruct.Deployer
+		varDeploymentStateInProgress.StartDate = varDeploymentStateInProgressWithoutEmbeddedStruct.StartDate
+		*o = DeploymentStateInProgress(varDeploymentStateInProgress)
+	} else {
+		return err
+	}
+
+	varDeploymentStateInProgress := _DeploymentStateInProgress{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateInProgress)
+	if err == nil {
+		o.DeploymentState = varDeploymentStateInProgress.DeploymentState
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "deployer")
+		delete(additionalProperties, "start_date")
+
+		// remove fields from embedded structs
+		reflectDeploymentState := reflect.ValueOf(o.DeploymentState)
+		for i := 0; i < reflectDeploymentState.Type().NumField(); i++ {
+			t := reflectDeploymentState.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateInProgress struct {

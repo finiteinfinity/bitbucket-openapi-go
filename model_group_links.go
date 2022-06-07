@@ -19,7 +19,10 @@ import (
 type GroupLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Html *Link `json:"html,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _GroupLinks GroupLinks
 
 // NewGroupLinks instantiates a new GroupLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o GroupLinks) MarshalJSON() ([]byte, error) {
 	if o.Html != nil {
 		toSerialize["html"] = o.Html
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *GroupLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varGroupLinks := _GroupLinks{}
+
+	if err = json.Unmarshal(bytes, &varGroupLinks); err == nil {
+		*o = GroupLinks(varGroupLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGroupLinks struct {

@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // JiraProject struct for JiraProject
 type JiraProject struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _JiraProject JiraProject
 
 // NewJiraProject instantiates a new JiraProject object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o JiraProject) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *JiraProject) UnmarshalJSON(bytes []byte) (err error) {
+	type JiraProjectWithoutEmbeddedStruct struct {
+	}
+
+	varJiraProjectWithoutEmbeddedStruct := JiraProjectWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varJiraProjectWithoutEmbeddedStruct)
+	if err == nil {
+		varJiraProject := _JiraProject{}
+		*o = JiraProject(varJiraProject)
+	} else {
+		return err
+	}
+
+	varJiraProject := _JiraProject{}
+
+	err = json.Unmarshal(bytes, &varJiraProject)
+	if err == nil {
+		o.Object = varJiraProject.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableJiraProject struct {

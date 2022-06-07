@@ -18,7 +18,10 @@ import (
 // IssueComment A issue comment.
 type IssueComment struct {
 	Issue *Issue `json:"issue,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueComment IssueComment
 
 // NewIssueComment instantiates a new IssueComment object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o IssueComment) MarshalJSON() ([]byte, error) {
 	if o.Issue != nil {
 		toSerialize["issue"] = o.Issue
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueComment) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueComment := _IssueComment{}
+
+	if err = json.Unmarshal(bytes, &varIssueComment); err == nil {
+		*o = IssueComment(varIssueComment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "issue")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueComment struct {

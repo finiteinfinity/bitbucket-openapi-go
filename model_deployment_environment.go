@@ -21,7 +21,10 @@ type DeploymentEnvironment struct {
 	Uuid *string `json:"uuid,omitempty"`
 	// The name of the environment.
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentEnvironment DeploymentEnvironment
 
 // NewDeploymentEnvironment instantiates a new DeploymentEnvironment object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o DeploymentEnvironment) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentEnvironment) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentEnvironment := _DeploymentEnvironment{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentEnvironment); err == nil {
+		*o = DeploymentEnvironment(varDeploymentEnvironment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentEnvironment struct {

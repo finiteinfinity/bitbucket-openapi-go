@@ -23,7 +23,10 @@ type ReportData struct {
 	Title *string `json:"title,omitempty"`
 	// The value of the data element.
 	Value map[string]interface{} `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReportData ReportData
 
 // NewReportData instantiates a new ReportData object
 // This constructor will assign default values to properties that have it defined,
@@ -149,7 +152,31 @@ func (o ReportData) MarshalJSON() ([]byte, error) {
 	if o.Value != nil {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ReportData) UnmarshalJSON(bytes []byte) (err error) {
+	varReportData := _ReportData{}
+
+	if err = json.Unmarshal(bytes, &varReportData); err == nil {
+		*o = ReportData(varReportData)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReportData struct {

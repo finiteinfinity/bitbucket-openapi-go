@@ -18,7 +18,10 @@ import (
 // PipelineScheduleExecutionErroredAllOf A Pipelines schedule execution that failed to be executed.
 type PipelineScheduleExecutionErroredAllOf struct {
 	Error *PipelineError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineScheduleExecutionErroredAllOf PipelineScheduleExecutionErroredAllOf
 
 // NewPipelineScheduleExecutionErroredAllOf instantiates a new PipelineScheduleExecutionErroredAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o PipelineScheduleExecutionErroredAllOf) MarshalJSON() ([]byte, error) {
 	if o.Error != nil {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineScheduleExecutionErroredAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineScheduleExecutionErroredAllOf := _PipelineScheduleExecutionErroredAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineScheduleExecutionErroredAllOf); err == nil {
+		*o = PipelineScheduleExecutionErroredAllOf(varPipelineScheduleExecutionErroredAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineScheduleExecutionErroredAllOf struct {

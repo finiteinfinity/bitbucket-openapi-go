@@ -25,7 +25,10 @@ type BranchingModelSettingsDevelopment struct {
 	UseMainbranch *bool `json:"use_mainbranch,omitempty"`
 	// Optional and only returned for a repository's branching model. Indicates ifthe indicated branch exists on the repository (`false`)or not (`true`). This is useful for determining a fallback to the mainbranch when a repository is inheriting its project's branching model.
 	BranchDoesNotExist *bool `json:"branch_does_not_exist,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelSettingsDevelopment BranchingModelSettingsDevelopment
 
 // NewBranchingModelSettingsDevelopment instantiates a new BranchingModelSettingsDevelopment object
 // This constructor will assign default values to properties that have it defined,
@@ -186,7 +189,32 @@ func (o BranchingModelSettingsDevelopment) MarshalJSON() ([]byte, error) {
 	if o.BranchDoesNotExist != nil {
 		toSerialize["branch_does_not_exist"] = o.BranchDoesNotExist
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelSettingsDevelopment) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelSettingsDevelopment := _BranchingModelSettingsDevelopment{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelSettingsDevelopment); err == nil {
+		*o = BranchingModelSettingsDevelopment(varBranchingModelSettingsDevelopment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "is_valid")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "use_mainbranch")
+		delete(additionalProperties, "branch_does_not_exist")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelSettingsDevelopment struct {

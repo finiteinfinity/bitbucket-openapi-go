@@ -33,7 +33,10 @@ type Pipeline struct {
 	CompletedOn *time.Time `json:"completed_on,omitempty"`
 	// The number of build seconds used by this pipeline.
 	BuildSecondsUsed *int32 `json:"build_seconds_used,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Pipeline Pipeline
 
 // NewPipeline instantiates a new Pipeline object
 // This constructor will assign default values to properties that have it defined,
@@ -404,7 +407,38 @@ func (o Pipeline) MarshalJSON() ([]byte, error) {
 	if o.BuildSecondsUsed != nil {
 		toSerialize["build_seconds_used"] = o.BuildSecondsUsed
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Pipeline) UnmarshalJSON(bytes []byte) (err error) {
+	varPipeline := _Pipeline{}
+
+	if err = json.Unmarshal(bytes, &varPipeline); err == nil {
+		*o = Pipeline(varPipeline)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "build_number")
+		delete(additionalProperties, "creator")
+		delete(additionalProperties, "repository")
+		delete(additionalProperties, "target")
+		delete(additionalProperties, "trigger")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "completed_on")
+		delete(additionalProperties, "build_seconds_used")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipeline struct {

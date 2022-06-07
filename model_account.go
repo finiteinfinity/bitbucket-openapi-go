@@ -29,7 +29,10 @@ type Account struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	Uuid *string `json:"uuid,omitempty"`
 	Has2faEnabled *bool `json:"has_2fa_enabled,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Account Account
 
 // NewAccount instantiates a new Account object
 // This constructor will assign default values to properties that have it defined,
@@ -365,7 +368,37 @@ func (o Account) MarshalJSON() ([]byte, error) {
 	if o.Has2faEnabled != nil {
 		toSerialize["has_2fa_enabled"] = o.Has2faEnabled
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Account) UnmarshalJSON(bytes []byte) (err error) {
+	varAccount := _Account{}
+
+	if err = json.Unmarshal(bytes, &varAccount); err == nil {
+		*o = Account(varAccount)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "username")
+		delete(additionalProperties, "nickname")
+		delete(additionalProperties, "account_status")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "website")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "has_2fa_enabled")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccount struct {

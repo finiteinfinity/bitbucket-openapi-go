@@ -20,7 +20,10 @@ type CommentLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Html *Link `json:"html,omitempty"`
 	Code *Link `json:"code,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommentLinks CommentLinks
 
 // NewCommentLinks instantiates a new CommentLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o CommentLinks) MarshalJSON() ([]byte, error) {
 	if o.Code != nil {
 		toSerialize["code"] = o.Code
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommentLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varCommentLinks := _CommentLinks{}
+
+	if err = json.Unmarshal(bytes, &varCommentLinks); err == nil {
+		*o = CommentLinks(varCommentLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "code")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommentLinks struct {

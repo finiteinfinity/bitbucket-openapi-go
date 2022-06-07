@@ -19,7 +19,10 @@ import (
 type ModelError struct {
 	Type string `json:"type"`
 	Error *ErrorError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ModelError ModelError
 
 // NewModelError instantiates a new ModelError object
 // This constructor will assign default values to properties that have it defined,
@@ -102,7 +105,30 @@ func (o ModelError) MarshalJSON() ([]byte, error) {
 	if o.Error != nil {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ModelError) UnmarshalJSON(bytes []byte) (err error) {
+	varModelError := _ModelError{}
+
+	if err = json.Unmarshal(bytes, &varModelError); err == nil {
+		*o = ModelError(varModelError)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableModelError struct {

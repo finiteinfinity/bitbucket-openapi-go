@@ -21,7 +21,10 @@ type PipelineCommand struct {
 	Name *string `json:"name,omitempty"`
 	// The executable command.
 	Command *string `json:"command,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineCommand PipelineCommand
 
 // NewPipelineCommand instantiates a new PipelineCommand object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o PipelineCommand) MarshalJSON() ([]byte, error) {
 	if o.Command != nil {
 		toSerialize["command"] = o.Command
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineCommand) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineCommand := _PipelineCommand{}
+
+	if err = json.Unmarshal(bytes, &varPipelineCommand); err == nil {
+		*o = PipelineCommand(varPipelineCommand)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "command")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineCommand struct {

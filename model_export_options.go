@@ -22,7 +22,10 @@ type ExportOptions struct {
 	ProjectName *string `json:"project_name,omitempty"`
 	SendEmail *bool `json:"send_email,omitempty"`
 	IncludeAttachments *bool `json:"include_attachments,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ExportOptions ExportOptions
 
 // NewExportOptions instantiates a new ExportOptions object
 // This constructor will assign default values to properties that have it defined,
@@ -210,7 +213,33 @@ func (o ExportOptions) MarshalJSON() ([]byte, error) {
 	if o.IncludeAttachments != nil {
 		toSerialize["include_attachments"] = o.IncludeAttachments
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ExportOptions) UnmarshalJSON(bytes []byte) (err error) {
+	varExportOptions := _ExportOptions{}
+
+	if err = json.Unmarshal(bytes, &varExportOptions); err == nil {
+		*o = ExportOptions(varExportOptions)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "project_key")
+		delete(additionalProperties, "project_name")
+		delete(additionalProperties, "send_email")
+		delete(additionalProperties, "include_attachments")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableExportOptions struct {

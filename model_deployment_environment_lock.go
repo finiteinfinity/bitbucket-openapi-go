@@ -19,7 +19,10 @@ import (
 type DeploymentEnvironmentLock struct {
 	// The UUID identifying the environment.
 	EnvironmentUuid *string `json:"environmentUuid,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentEnvironmentLock DeploymentEnvironmentLock
 
 // NewDeploymentEnvironmentLock instantiates a new DeploymentEnvironmentLock object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o DeploymentEnvironmentLock) MarshalJSON() ([]byte, error) {
 	if o.EnvironmentUuid != nil {
 		toSerialize["environmentUuid"] = o.EnvironmentUuid
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentEnvironmentLock) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentEnvironmentLock := _DeploymentEnvironmentLock{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentEnvironmentLock); err == nil {
+		*o = DeploymentEnvironmentLock(varDeploymentEnvironmentLock)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "environmentUuid")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentEnvironmentLock struct {

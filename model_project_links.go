@@ -19,7 +19,10 @@ import (
 type ProjectLinks struct {
 	Html *Link `json:"html,omitempty"`
 	Avatar *Link `json:"avatar,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ProjectLinks ProjectLinks
 
 // NewProjectLinks instantiates a new ProjectLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o ProjectLinks) MarshalJSON() ([]byte, error) {
 	if o.Avatar != nil {
 		toSerialize["avatar"] = o.Avatar
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *ProjectLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varProjectLinks := _ProjectLinks{}
+
+	if err = json.Unmarshal(bytes, &varProjectLinks); err == nil {
+		*o = ProjectLinks(varProjectLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "avatar")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableProjectLinks struct {

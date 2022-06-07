@@ -20,7 +20,10 @@ type SnippetCommitLinks struct {
 	Self *Link `json:"self,omitempty"`
 	Html *Link `json:"html,omitempty"`
 	Diff *Link `json:"diff,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SnippetCommitLinks SnippetCommitLinks
 
 // NewSnippetCommitLinks instantiates a new SnippetCommitLinks object
 // This constructor will assign default values to properties that have it defined,
@@ -146,7 +149,31 @@ func (o SnippetCommitLinks) MarshalJSON() ([]byte, error) {
 	if o.Diff != nil {
 		toSerialize["diff"] = o.Diff
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SnippetCommitLinks) UnmarshalJSON(bytes []byte) (err error) {
+	varSnippetCommitLinks := _SnippetCommitLinks{}
+
+	if err = json.Unmarshal(bytes, &varSnippetCommitLinks); err == nil {
+		*o = SnippetCommitLinks(varSnippetCommitLinks)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "self")
+		delete(additionalProperties, "html")
+		delete(additionalProperties, "diff")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSnippetCommitLinks struct {

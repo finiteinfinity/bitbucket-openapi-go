@@ -22,7 +22,10 @@ type SearchCodeSearchResult struct {
 	ContentMatches []SearchContentMatch `json:"content_matches,omitempty"`
 	PathMatches []SearchSegment `json:"path_matches,omitempty"`
 	File *CommitFile `json:"file,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchCodeSearchResult SearchCodeSearchResult
 
 // NewSearchCodeSearchResult instantiates a new SearchCodeSearchResult object
 // This constructor will assign default values to properties that have it defined,
@@ -218,7 +221,33 @@ func (o SearchCodeSearchResult) MarshalJSON() ([]byte, error) {
 	if o.File != nil {
 		toSerialize["file"] = o.File
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SearchCodeSearchResult) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchCodeSearchResult := _SearchCodeSearchResult{}
+
+	if err = json.Unmarshal(bytes, &varSearchCodeSearchResult); err == nil {
+		*o = SearchCodeSearchResult(varSearchCodeSearchResult)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "content_match_count")
+		delete(additionalProperties, "content_matches")
+		delete(additionalProperties, "path_matches")
+		delete(additionalProperties, "file")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchCodeSearchResult struct {

@@ -22,7 +22,10 @@ type PipelineKnownHost struct {
 	// The hostname of the known host.
 	Hostname *string `json:"hostname,omitempty"`
 	PublicKey *PipelineSshPublicKey `json:"public_key,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineKnownHost PipelineKnownHost
 
 // NewPipelineKnownHost instantiates a new PipelineKnownHost object
 // This constructor will assign default values to properties that have it defined,
@@ -148,7 +151,31 @@ func (o PipelineKnownHost) MarshalJSON() ([]byte, error) {
 	if o.PublicKey != nil {
 		toSerialize["public_key"] = o.PublicKey
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineKnownHost) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineKnownHost := _PipelineKnownHost{}
+
+	if err = json.Unmarshal(bytes, &varPipelineKnownHost); err == nil {
+		*o = PipelineKnownHost(varPipelineKnownHost)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "hostname")
+		delete(additionalProperties, "public_key")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineKnownHost struct {

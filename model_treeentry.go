@@ -21,7 +21,10 @@ type Treeentry struct {
 	// The path in the repository
 	Path *string `json:"path,omitempty"`
 	Commit *Commit `json:"commit,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Treeentry Treeentry
 
 // NewTreeentry instantiates a new Treeentry object
 // This constructor will assign default values to properties that have it defined,
@@ -139,7 +142,31 @@ func (o Treeentry) MarshalJSON() ([]byte, error) {
 	if o.Commit != nil {
 		toSerialize["commit"] = o.Commit
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Treeentry) UnmarshalJSON(bytes []byte) (err error) {
+	varTreeentry := _Treeentry{}
+
+	if err = json.Unmarshal(bytes, &varTreeentry); err == nil {
+		*o = Treeentry(varTreeentry)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "commit")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTreeentry struct {

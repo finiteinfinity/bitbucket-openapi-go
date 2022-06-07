@@ -35,7 +35,10 @@ type CommitStatus struct {
 	Description *string `json:"description,omitempty"`
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommitStatus CommitStatus
 
 // NewCommitStatus instantiates a new CommitStatus object
 // This constructor will assign default values to properties that have it defined,
@@ -406,7 +409,38 @@ func (o CommitStatus) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommitStatus) UnmarshalJSON(bytes []byte) (err error) {
+	varCommitStatus := _CommitStatus{}
+
+	if err = json.Unmarshal(bytes, &varCommitStatus); err == nil {
+		*o = CommitStatus(varCommitStatus)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "refname")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitStatus struct {

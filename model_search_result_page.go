@@ -24,7 +24,10 @@ type SearchResultPage struct {
 	Next *string `json:"next,omitempty"`
 	Previous *string `json:"previous,omitempty"`
 	Values []SearchCodeSearchResult `json:"values,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchResultPage SearchResultPage
 
 // NewSearchResultPage instantiates a new SearchResultPage object
 // This constructor will assign default values to properties that have it defined,
@@ -290,7 +293,35 @@ func (o SearchResultPage) MarshalJSON() ([]byte, error) {
 	if o.Values != nil {
 		toSerialize["values"] = o.Values
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SearchResultPage) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchResultPage := _SearchResultPage{}
+
+	if err = json.Unmarshal(bytes, &varSearchResultPage); err == nil {
+		*o = SearchResultPage(varSearchResultPage)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "page")
+		delete(additionalProperties, "pagelen")
+		delete(additionalProperties, "query_substituted")
+		delete(additionalProperties, "next")
+		delete(additionalProperties, "previous")
+		delete(additionalProperties, "values")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchResultPage struct {

@@ -25,7 +25,10 @@ type DeploymentVariable struct {
 	Value *string `json:"value,omitempty"`
 	// If true, this variable will be treated as secured. The value will never be exposed in the logs or the REST API.
 	Secured *bool `json:"secured,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentVariable DeploymentVariable
 
 // NewDeploymentVariable instantiates a new DeploymentVariable object
 // This constructor will assign default values to properties that have it defined,
@@ -186,7 +189,32 @@ func (o DeploymentVariable) MarshalJSON() ([]byte, error) {
 	if o.Secured != nil {
 		toSerialize["secured"] = o.Secured
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentVariable) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentVariable := _DeploymentVariable{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentVariable); err == nil {
+		*o = DeploymentVariable(varDeploymentVariable)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "value")
+		delete(additionalProperties, "secured")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentVariable struct {

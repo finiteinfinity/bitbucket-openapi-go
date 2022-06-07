@@ -27,7 +27,10 @@ type Comment struct {
 	Parent *Comment `json:"parent,omitempty"`
 	Inline *CommentInline `json:"inline,omitempty"`
 	Links *CommentLinks `json:"links,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Comment Comment
 
 // NewComment instantiates a new Comment object
 // This constructor will assign default values to properties that have it defined,
@@ -363,7 +366,37 @@ func (o Comment) MarshalJSON() ([]byte, error) {
 	if o.Links != nil {
 		toSerialize["links"] = o.Links
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Comment) UnmarshalJSON(bytes []byte) (err error) {
+	varComment := _Comment{}
+
+	if err = json.Unmarshal(bytes, &varComment); err == nil {
+		*o = Comment(varComment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "content")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "deleted")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "inline")
+		delete(additionalProperties, "links")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableComment struct {

@@ -33,7 +33,10 @@ type Project struct {
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
 	//  Indicates whether the project contains publicly visible repositories. Note that private projects cannot contain public repositories.
 	HasPubliclyVisibleRepos *bool `json:"has_publicly_visible_repos,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Project Project
 
 // NewProject instantiates a new Project object
 // This constructor will assign default values to properties that have it defined,
@@ -404,7 +407,38 @@ func (o Project) MarshalJSON() ([]byte, error) {
 	if o.HasPubliclyVisibleRepos != nil {
 		toSerialize["has_publicly_visible_repos"] = o.HasPubliclyVisibleRepos
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Project) UnmarshalJSON(bytes []byte) (err error) {
+	varProject := _Project{}
+
+	if err = json.Unmarshal(bytes, &varProject); err == nil {
+		*o = Project(varProject)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "owner")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "is_private")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		delete(additionalProperties, "has_publicly_visible_repos")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableProject struct {

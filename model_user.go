@@ -20,7 +20,10 @@ type User struct {
 	IsStaff *bool `json:"is_staff,omitempty"`
 	// The user's Atlassian account ID.
 	AccountId *string `json:"account_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _User User
 
 // NewUser instantiates a new User object
 // This constructor will assign default values to properties that have it defined,
@@ -111,7 +114,30 @@ func (o User) MarshalJSON() ([]byte, error) {
 	if o.AccountId != nil {
 		toSerialize["account_id"] = o.AccountId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *User) UnmarshalJSON(bytes []byte) (err error) {
+	varUser := _User{}
+
+	if err = json.Unmarshal(bytes, &varUser); err == nil {
+		*o = User(varUser)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "is_staff")
+		delete(additionalProperties, "account_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUser struct {

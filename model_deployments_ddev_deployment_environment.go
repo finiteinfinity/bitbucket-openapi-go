@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DeploymentsDdevDeploymentEnvironment struct for DeploymentsDdevDeploymentEnvironment
@@ -22,7 +24,10 @@ type DeploymentsDdevDeploymentEnvironment struct {
 	Uuid *string `json:"uuid,omitempty"`
 	// The name of the environment.
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentsDdevDeploymentEnvironment DeploymentsDdevDeploymentEnvironment
 
 // NewDeploymentsDdevDeploymentEnvironment instantiates a new DeploymentsDdevDeploymentEnvironment object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +126,71 @@ func (o DeploymentsDdevDeploymentEnvironment) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentsDdevDeploymentEnvironment) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct struct {
+		// The UUID identifying the environment.
+		Uuid *string `json:"uuid,omitempty"`
+		// The name of the environment.
+		Name *string `json:"name,omitempty"`
+	}
+
+	varDeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct := DeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentsDdevDeploymentEnvironment := _DeploymentsDdevDeploymentEnvironment{}
+		varDeploymentsDdevDeploymentEnvironment.Uuid = varDeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct.Uuid
+		varDeploymentsDdevDeploymentEnvironment.Name = varDeploymentsDdevDeploymentEnvironmentWithoutEmbeddedStruct.Name
+		*o = DeploymentsDdevDeploymentEnvironment(varDeploymentsDdevDeploymentEnvironment)
+	} else {
+		return err
+	}
+
+	varDeploymentsDdevDeploymentEnvironment := _DeploymentsDdevDeploymentEnvironment{}
+
+	err = json.Unmarshal(bytes, &varDeploymentsDdevDeploymentEnvironment)
+	if err == nil {
+		o.Object = varDeploymentsDdevDeploymentEnvironment.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentsDdevDeploymentEnvironment struct {

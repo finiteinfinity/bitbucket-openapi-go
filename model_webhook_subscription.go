@@ -31,7 +31,10 @@ type WebhookSubscription struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The events this webhook is subscribed to.
 	Events []string `json:"events,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _WebhookSubscription WebhookSubscription
 
 // NewWebhookSubscription instantiates a new WebhookSubscription object
 // This constructor will assign default values to properties that have it defined,
@@ -332,7 +335,36 @@ func (o WebhookSubscription) MarshalJSON() ([]byte, error) {
 	if o.Events != nil {
 		toSerialize["events"] = o.Events
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *WebhookSubscription) UnmarshalJSON(bytes []byte) (err error) {
+	varWebhookSubscription := _WebhookSubscription{}
+
+	if err = json.Unmarshal(bytes, &varWebhookSubscription); err == nil {
+		*o = WebhookSubscription(varWebhookSubscription)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "subject_type")
+		delete(additionalProperties, "subject")
+		delete(additionalProperties, "active")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "events")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableWebhookSubscription struct {

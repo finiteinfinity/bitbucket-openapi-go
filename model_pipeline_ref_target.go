@@ -23,7 +23,10 @@ type PipelineRefTarget struct {
 	RefName *string `json:"ref_name,omitempty"`
 	Commit *Commit `json:"commit,omitempty"`
 	Selector *PipelineSelector `json:"selector,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineRefTarget PipelineRefTarget
 
 // NewPipelineRefTarget instantiates a new PipelineRefTarget object
 // This constructor will assign default values to properties that have it defined,
@@ -184,7 +187,32 @@ func (o PipelineRefTarget) MarshalJSON() ([]byte, error) {
 	if o.Selector != nil {
 		toSerialize["selector"] = o.Selector
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineRefTarget) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineRefTarget := _PipelineRefTarget{}
+
+	if err = json.Unmarshal(bytes, &varPipelineRefTarget); err == nil {
+		*o = PipelineRefTarget(varPipelineRefTarget)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ref_type")
+		delete(additionalProperties, "ref_name")
+		delete(additionalProperties, "commit")
+		delete(additionalProperties, "selector")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineRefTarget struct {

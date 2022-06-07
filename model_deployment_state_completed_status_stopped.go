@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DeploymentStateCompletedStatusStopped struct for DeploymentStateCompletedStatusStopped
@@ -20,7 +22,10 @@ type DeploymentStateCompletedStatusStopped struct {
 	DeploymentStateCompletedStatus
 	// The name of the completed deployment status (STOPPED).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateCompletedStatusStopped DeploymentStateCompletedStatusStopped
 
 // NewDeploymentStateCompletedStatusStopped instantiates a new DeploymentStateCompletedStatusStopped object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +89,67 @@ func (o DeploymentStateCompletedStatusStopped) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateCompletedStatusStopped) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentStateCompletedStatusStoppedWithoutEmbeddedStruct struct {
+		// The name of the completed deployment status (STOPPED).
+		Name *string `json:"name,omitempty"`
+	}
+
+	varDeploymentStateCompletedStatusStoppedWithoutEmbeddedStruct := DeploymentStateCompletedStatusStoppedWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateCompletedStatusStoppedWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentStateCompletedStatusStopped := _DeploymentStateCompletedStatusStopped{}
+		varDeploymentStateCompletedStatusStopped.Name = varDeploymentStateCompletedStatusStoppedWithoutEmbeddedStruct.Name
+		*o = DeploymentStateCompletedStatusStopped(varDeploymentStateCompletedStatusStopped)
+	} else {
+		return err
+	}
+
+	varDeploymentStateCompletedStatusStopped := _DeploymentStateCompletedStatusStopped{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateCompletedStatusStopped)
+	if err == nil {
+		o.DeploymentStateCompletedStatus = varDeploymentStateCompletedStatusStopped.DeploymentStateCompletedStatus
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectDeploymentStateCompletedStatus := reflect.ValueOf(o.DeploymentStateCompletedStatus)
+		for i := 0; i < reflectDeploymentStateCompletedStatus.Type().NumField(); i++ {
+			t := reflectDeploymentStateCompletedStatus.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateCompletedStatusStopped struct {

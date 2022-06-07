@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // DeploymentState struct for DeploymentState
 type DeploymentState struct {
 	Object
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentState DeploymentState
 
 // NewDeploymentState instantiates a new DeploymentState object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o DeploymentState) MarshalJSON() ([]byte, error) {
 	if errObject != nil {
 		return []byte{}, errObject
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentState) UnmarshalJSON(bytes []byte) (err error) {
+	type DeploymentStateWithoutEmbeddedStruct struct {
+	}
+
+	varDeploymentStateWithoutEmbeddedStruct := DeploymentStateWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varDeploymentStateWithoutEmbeddedStruct)
+	if err == nil {
+		varDeploymentState := _DeploymentState{}
+		*o = DeploymentState(varDeploymentState)
+	} else {
+		return err
+	}
+
+	varDeploymentState := _DeploymentState{}
+
+	err = json.Unmarshal(bytes, &varDeploymentState)
+	if err == nil {
+		o.Object = varDeploymentState.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentState struct {

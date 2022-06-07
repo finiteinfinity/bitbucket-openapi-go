@@ -25,7 +25,10 @@ type PipelineImage struct {
 	Password *string `json:"password,omitempty"`
 	// The email needed to authenticate with the Docker registry. Only required when using a private Docker image.
 	Email *string `json:"email,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineImage PipelineImage
 
 // NewPipelineImage instantiates a new PipelineImage object
 // This constructor will assign default values to properties that have it defined,
@@ -186,7 +189,32 @@ func (o PipelineImage) MarshalJSON() ([]byte, error) {
 	if o.Email != nil {
 		toSerialize["email"] = o.Email
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineImage) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineImage := _PipelineImage{}
+
+	if err = json.Unmarshal(bytes, &varPipelineImage); err == nil {
+		*o = PipelineImage(varPipelineImage)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "username")
+		delete(additionalProperties, "password")
+		delete(additionalProperties, "email")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineImage struct {

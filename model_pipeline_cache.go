@@ -32,7 +32,10 @@ type PipelineCache struct {
 	FileSizeBytes *int32 `json:"file_size_bytes,omitempty"`
 	// The timestamp when the cache was created.
 	CreatedOn *time.Time `json:"created_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineCache PipelineCache
 
 // NewPipelineCache instantiates a new PipelineCache object
 // This constructor will assign default values to properties that have it defined,
@@ -298,7 +301,35 @@ func (o PipelineCache) MarshalJSON() ([]byte, error) {
 	if o.CreatedOn != nil {
 		toSerialize["created_on"] = o.CreatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineCache) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineCache := _PipelineCache{}
+
+	if err = json.Unmarshal(bytes, &varPipelineCache); err == nil {
+		*o = PipelineCache(varPipelineCache)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "pipeline_uuid")
+		delete(additionalProperties, "step_uuid")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "file_size_bytes")
+		delete(additionalProperties, "created_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineCache struct {

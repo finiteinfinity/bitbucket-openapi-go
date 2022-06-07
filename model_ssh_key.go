@@ -14,6 +14,8 @@ package bitbucket
 import (
 	"encoding/json"
 	"time"
+	"reflect"
+	"strings"
 )
 
 // SshKey struct for SshKey
@@ -30,7 +32,10 @@ type SshKey struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	LastUsed *time.Time `json:"last_used,omitempty"`
 	Links *BranchingModelSettingsLinks `json:"links,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SshKey SshKey
 
 // NewSshKey instantiates a new SshKey object
 // This constructor will assign default values to properties that have it defined,
@@ -304,7 +309,88 @@ func (o SshKey) MarshalJSON() ([]byte, error) {
 	if o.Links != nil {
 		toSerialize["links"] = o.Links
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SshKey) UnmarshalJSON(bytes []byte) (err error) {
+	type SshKeyWithoutEmbeddedStruct struct {
+		// The SSH key's immutable ID.
+		Uuid *string `json:"uuid,omitempty"`
+		// The SSH public key value in OpenSSH format.
+		Key *string `json:"key,omitempty"`
+		// The comment parsed from the SSH key (if present)
+		Comment *string `json:"comment,omitempty"`
+		// The user-defined label for the SSH key
+		Label *string `json:"label,omitempty"`
+		CreatedOn *time.Time `json:"created_on,omitempty"`
+		LastUsed *time.Time `json:"last_used,omitempty"`
+		Links *BranchingModelSettingsLinks `json:"links,omitempty"`
+	}
+
+	varSshKeyWithoutEmbeddedStruct := SshKeyWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varSshKeyWithoutEmbeddedStruct)
+	if err == nil {
+		varSshKey := _SshKey{}
+		varSshKey.Uuid = varSshKeyWithoutEmbeddedStruct.Uuid
+		varSshKey.Key = varSshKeyWithoutEmbeddedStruct.Key
+		varSshKey.Comment = varSshKeyWithoutEmbeddedStruct.Comment
+		varSshKey.Label = varSshKeyWithoutEmbeddedStruct.Label
+		varSshKey.CreatedOn = varSshKeyWithoutEmbeddedStruct.CreatedOn
+		varSshKey.LastUsed = varSshKeyWithoutEmbeddedStruct.LastUsed
+		varSshKey.Links = varSshKeyWithoutEmbeddedStruct.Links
+		*o = SshKey(varSshKey)
+	} else {
+		return err
+	}
+
+	varSshKey := _SshKey{}
+
+	err = json.Unmarshal(bytes, &varSshKey)
+	if err == nil {
+		o.Object = varSshKey.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "label")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "last_used")
+		delete(additionalProperties, "links")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSshKey struct {

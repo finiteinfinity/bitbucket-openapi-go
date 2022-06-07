@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineTriggerManual struct for PipelineTriggerManual
 type PipelineTriggerManual struct {
 	PipelineTrigger
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineTriggerManual PipelineTriggerManual
 
 // NewPipelineTriggerManual instantiates a new PipelineTriggerManual object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o PipelineTriggerManual) MarshalJSON() ([]byte, error) {
 	if errPipelineTrigger != nil {
 		return []byte{}, errPipelineTrigger
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineTriggerManual) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineTriggerManualWithoutEmbeddedStruct struct {
+	}
+
+	varPipelineTriggerManualWithoutEmbeddedStruct := PipelineTriggerManualWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineTriggerManualWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineTriggerManual := _PipelineTriggerManual{}
+		*o = PipelineTriggerManual(varPipelineTriggerManual)
+	} else {
+		return err
+	}
+
+	varPipelineTriggerManual := _PipelineTriggerManual{}
+
+	err = json.Unmarshal(bytes, &varPipelineTriggerManual)
+	if err == nil {
+		o.PipelineTrigger = varPipelineTriggerManual.PipelineTrigger
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectPipelineTrigger := reflect.ValueOf(o.PipelineTrigger)
+		for i := 0; i < reflectPipelineTrigger.Type().NumField(); i++ {
+			t := reflectPipelineTrigger.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineTriggerManual struct {

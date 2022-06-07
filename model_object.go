@@ -18,7 +18,10 @@ import (
 // Object Base type for most resource objects. It defines the common `type` element that identifies an object's type. It also identifies the element as Swagger's `discriminator`.
 type Object struct {
 	Type string `json:"type"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Object Object
 
 // NewObject instantiates a new Object object
 // This constructor will assign default values to properties that have it defined,
@@ -66,7 +69,29 @@ func (o Object) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Object) UnmarshalJSON(bytes []byte) (err error) {
+	varObject := _Object{}
+
+	if err = json.Unmarshal(bytes, &varObject); err == nil {
+		*o = Object(varObject)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableObject struct {

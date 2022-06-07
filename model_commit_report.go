@@ -44,7 +44,10 @@ type CommitReport struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	// The timestamp when the report was updated.
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CommitReport CommitReport
 
 // NewCommitReport instantiates a new CommitReport object
 // This constructor will assign default values to properties that have it defined,
@@ -520,7 +523,41 @@ func (o CommitReport) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *CommitReport) UnmarshalJSON(bytes []byte) (err error) {
+	varCommitReport := _CommitReport{}
+
+	if err = json.Unmarshal(bytes, &varCommitReport); err == nil {
+		*o = CommitReport(varCommitReport)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "details")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "reporter")
+		delete(additionalProperties, "link")
+		delete(additionalProperties, "remote_link_enabled")
+		delete(additionalProperties, "logo_url")
+		delete(additionalProperties, "report_type")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCommitReport struct {

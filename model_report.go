@@ -14,6 +14,8 @@ package bitbucket
 import (
 	"encoding/json"
 	"time"
+	"reflect"
+	"strings"
 )
 
 // Report struct for Report
@@ -45,7 +47,10 @@ type Report struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	// The timestamp when the report was updated.
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Report Report
 
 // NewReport instantiates a new Report object
 // This constructor will assign default values to properties that have it defined,
@@ -529,7 +534,115 @@ func (o Report) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Report) UnmarshalJSON(bytes []byte) (err error) {
+	type ReportWithoutEmbeddedStruct struct {
+		// The UUID that can be used to identify the report.
+		Uuid *string `json:"uuid,omitempty"`
+		// The title of the report.
+		Title *string `json:"title,omitempty"`
+		// A string to describe the purpose of the report.
+		Details *string `json:"details,omitempty"`
+		// ID of the report provided by the report creator. It can be used to identify the report as an alternative to it's generated uuid. It is not used by Bitbucket, but only by the report creator for updating or deleting this specific report. Needs to be unique.
+		ExternalId *string `json:"external_id,omitempty"`
+		// A string to describe the tool or company who created the report.
+		Reporter *string `json:"reporter,omitempty"`
+		// A URL linking to the results of the report in an external tool.
+		Link *string `json:"link,omitempty"`
+		// If enabled, a remote link is created in Jira for the issue associated with the commit the report belongs to.
+		RemoteLinkEnabled *bool `json:"remote_link_enabled,omitempty"`
+		// A URL to the report logo. If none is provided, the default insights logo will be used.
+		LogoUrl *string `json:"logo_url,omitempty"`
+		// The type of the report.
+		ReportType *string `json:"report_type,omitempty"`
+		// The state of the report. May be set to PENDING and later updated.
+		Result *string `json:"result,omitempty"`
+		// An array of data fields to display information on the report. Maximum 10.
+		Data []ReportData `json:"data,omitempty"`
+		// The timestamp when the report was created.
+		CreatedOn *time.Time `json:"created_on,omitempty"`
+		// The timestamp when the report was updated.
+		UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	}
+
+	varReportWithoutEmbeddedStruct := ReportWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varReportWithoutEmbeddedStruct)
+	if err == nil {
+		varReport := _Report{}
+		varReport.Uuid = varReportWithoutEmbeddedStruct.Uuid
+		varReport.Title = varReportWithoutEmbeddedStruct.Title
+		varReport.Details = varReportWithoutEmbeddedStruct.Details
+		varReport.ExternalId = varReportWithoutEmbeddedStruct.ExternalId
+		varReport.Reporter = varReportWithoutEmbeddedStruct.Reporter
+		varReport.Link = varReportWithoutEmbeddedStruct.Link
+		varReport.RemoteLinkEnabled = varReportWithoutEmbeddedStruct.RemoteLinkEnabled
+		varReport.LogoUrl = varReportWithoutEmbeddedStruct.LogoUrl
+		varReport.ReportType = varReportWithoutEmbeddedStruct.ReportType
+		varReport.Result = varReportWithoutEmbeddedStruct.Result
+		varReport.Data = varReportWithoutEmbeddedStruct.Data
+		varReport.CreatedOn = varReportWithoutEmbeddedStruct.CreatedOn
+		varReport.UpdatedOn = varReportWithoutEmbeddedStruct.UpdatedOn
+		*o = Report(varReport)
+	} else {
+		return err
+	}
+
+	varReport := _Report{}
+
+	err = json.Unmarshal(bytes, &varReport)
+	if err == nil {
+		o.Object = varReport.Object
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "details")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "reporter")
+		delete(additionalProperties, "link")
+		delete(additionalProperties, "remote_link_enabled")
+		delete(additionalProperties, "logo_url")
+		delete(additionalProperties, "report_type")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+
+		// remove fields from embedded structs
+		reflectObject := reflect.ValueOf(o.Object)
+		for i := 0; i < reflectObject.Type().NumField(); i++ {
+			t := reflectObject.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReport struct {

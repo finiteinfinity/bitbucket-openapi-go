@@ -18,7 +18,10 @@ import (
 // SearchContentMatch struct for SearchContentMatch
 type SearchContentMatch struct {
 	Lines []SearchLine `json:"lines,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchContentMatch SearchContentMatch
 
 // NewSearchContentMatch instantiates a new SearchContentMatch object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o SearchContentMatch) MarshalJSON() ([]byte, error) {
 	if o.Lines != nil {
 		toSerialize["lines"] = o.Lines
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SearchContentMatch) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchContentMatch := _SearchContentMatch{}
+
+	if err = json.Unmarshal(bytes, &varSearchContentMatch); err == nil {
+		*o = SearchContentMatch(varSearchContentMatch)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "lines")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchContentMatch struct {

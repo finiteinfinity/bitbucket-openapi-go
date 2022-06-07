@@ -21,7 +21,10 @@ type PipelineStepError struct {
 	Key *string `json:"key,omitempty"`
 	// The error message.
 	Message *string `json:"message,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepError PipelineStepError
 
 // NewPipelineStepError instantiates a new PipelineStepError object
 // This constructor will assign default values to properties that have it defined,
@@ -112,7 +115,30 @@ func (o PipelineStepError) MarshalJSON() ([]byte, error) {
 	if o.Message != nil {
 		toSerialize["message"] = o.Message
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepError) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStepError := _PipelineStepError{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStepError); err == nil {
+		*o = PipelineStepError(varPipelineStepError)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "message")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepError struct {

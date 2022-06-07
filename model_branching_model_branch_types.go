@@ -21,7 +21,10 @@ type BranchingModelBranchTypes struct {
 	Kind string `json:"kind"`
 	// The prefix for this branch type. A branch with this prefix will be classified as per `kind`. The prefix must be a valid prefix for a branch and must always exist. It cannot be blank, empty or `null`.
 	Prefix string `json:"prefix"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BranchingModelBranchTypes BranchingModelBranchTypes
 
 // NewBranchingModelBranchTypes instantiates a new BranchingModelBranchTypes object
 // This constructor will assign default values to properties that have it defined,
@@ -98,7 +101,30 @@ func (o BranchingModelBranchTypes) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["prefix"] = o.Prefix
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *BranchingModelBranchTypes) UnmarshalJSON(bytes []byte) (err error) {
+	varBranchingModelBranchTypes := _BranchingModelBranchTypes{}
+
+	if err = json.Unmarshal(bytes, &varBranchingModelBranchTypes); err == nil {
+		*o = BranchingModelBranchTypes(varBranchingModelBranchTypes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "prefix")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBranchingModelBranchTypes struct {

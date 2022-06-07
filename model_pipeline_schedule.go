@@ -30,7 +30,10 @@ type PipelineSchedule struct {
 	CreatedOn *time.Time `json:"created_on,omitempty"`
 	// The timestamp when the schedule was updated.
 	UpdatedOn *time.Time `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineSchedule PipelineSchedule
 
 // NewPipelineSchedule instantiates a new PipelineSchedule object
 // This constructor will assign default values to properties that have it defined,
@@ -296,7 +299,35 @@ func (o PipelineSchedule) MarshalJSON() ([]byte, error) {
 	if o.UpdatedOn != nil {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineSchedule) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineSchedule := _PipelineSchedule{}
+
+	if err = json.Unmarshal(bytes, &varPipelineSchedule); err == nil {
+		*o = PipelineSchedule(varPipelineSchedule)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "target")
+		delete(additionalProperties, "selector")
+		delete(additionalProperties, "cron_pattern")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineSchedule struct {

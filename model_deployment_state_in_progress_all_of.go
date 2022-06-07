@@ -25,7 +25,10 @@ type DeploymentStateInProgressAllOf struct {
 	Deployer *Account `json:"deployer,omitempty"`
 	// The timestamp when the deployment was started.
 	StartDate *time.Time `json:"start_date,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeploymentStateInProgressAllOf DeploymentStateInProgressAllOf
 
 // NewDeploymentStateInProgressAllOf instantiates a new DeploymentStateInProgressAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -186,7 +189,32 @@ func (o DeploymentStateInProgressAllOf) MarshalJSON() ([]byte, error) {
 	if o.StartDate != nil {
 		toSerialize["start_date"] = o.StartDate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *DeploymentStateInProgressAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varDeploymentStateInProgressAllOf := _DeploymentStateInProgressAllOf{}
+
+	if err = json.Unmarshal(bytes, &varDeploymentStateInProgressAllOf); err == nil {
+		*o = DeploymentStateInProgressAllOf(varDeploymentStateInProgressAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "deployer")
+		delete(additionalProperties, "start_date")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeploymentStateInProgressAllOf struct {

@@ -1,3 +1,4 @@
 {
-  "structPrefix": true
+  "structPrefix": true,
+  "disallowAdditionalPropertiesIfNotPresent": false
 }

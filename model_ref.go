@@ -22,7 +22,10 @@ type Ref struct {
 	// The name of the ref.
 	Name *string `json:"name,omitempty"`
 	Target *Commit `json:"target,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Ref Ref
 
 // NewRef instantiates a new Ref object
 // This constructor will assign default values to properties that have it defined,
@@ -175,7 +178,32 @@ func (o Ref) MarshalJSON() ([]byte, error) {
 	if o.Target != nil {
 		toSerialize["target"] = o.Target
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Ref) UnmarshalJSON(bytes []byte) (err error) {
+	varRef := _Ref{}
+
+	if err = json.Unmarshal(bytes, &varRef); err == nil {
+		*o = Ref(varRef)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "target")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRef struct {

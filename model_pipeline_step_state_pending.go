@@ -13,6 +13,8 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // PipelineStepStatePending struct for PipelineStepStatePending
@@ -20,7 +22,10 @@ type PipelineStepStatePending struct {
 	PipelineStepState
 	// The name of pipeline step state (PENDING).
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepStatePending PipelineStepStatePending
 
 // NewPipelineStepStatePending instantiates a new PipelineStepStatePending object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +89,67 @@ func (o PipelineStepStatePending) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepStatePending) UnmarshalJSON(bytes []byte) (err error) {
+	type PipelineStepStatePendingWithoutEmbeddedStruct struct {
+		// The name of pipeline step state (PENDING).
+		Name *string `json:"name,omitempty"`
+	}
+
+	varPipelineStepStatePendingWithoutEmbeddedStruct := PipelineStepStatePendingWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepStatePendingWithoutEmbeddedStruct)
+	if err == nil {
+		varPipelineStepStatePending := _PipelineStepStatePending{}
+		varPipelineStepStatePending.Name = varPipelineStepStatePendingWithoutEmbeddedStruct.Name
+		*o = PipelineStepStatePending(varPipelineStepStatePending)
+	} else {
+		return err
+	}
+
+	varPipelineStepStatePending := _PipelineStepStatePending{}
+
+	err = json.Unmarshal(bytes, &varPipelineStepStatePending)
+	if err == nil {
+		o.PipelineStepState = varPipelineStepStatePending.PipelineStepState
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+
+		// remove fields from embedded structs
+		reflectPipelineStepState := reflect.ValueOf(o.PipelineStepState)
+		for i := 0; i < reflectPipelineStepState.Type().NumField(); i++ {
+			t := reflectPipelineStepState.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepStatePending struct {

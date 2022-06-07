@@ -18,7 +18,10 @@ import (
 // SubjectTypesRepository struct for SubjectTypesRepository
 type SubjectTypesRepository struct {
 	Events *Link `json:"events,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SubjectTypesRepository SubjectTypesRepository
 
 // NewSubjectTypesRepository instantiates a new SubjectTypesRepository object
 // This constructor will assign default values to properties that have it defined,
@@ -74,7 +77,29 @@ func (o SubjectTypesRepository) MarshalJSON() ([]byte, error) {
 	if o.Events != nil {
 		toSerialize["events"] = o.Events
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SubjectTypesRepository) UnmarshalJSON(bytes []byte) (err error) {
+	varSubjectTypesRepository := _SubjectTypesRepository{}
+
+	if err = json.Unmarshal(bytes, &varSubjectTypesRepository); err == nil {
+		*o = SubjectTypesRepository(varSubjectTypesRepository)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "events")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSubjectTypesRepository struct {

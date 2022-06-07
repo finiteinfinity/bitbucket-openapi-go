@@ -26,7 +26,10 @@ type IssueChange struct {
 	Issue *Issue `json:"issue,omitempty"`
 	Changes *IssueChangeChanges `json:"changes,omitempty"`
 	Message *RenderedPullRequestMarkupTitle `json:"message,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IssueChange IssueChange
 
 // NewIssueChange instantiates a new IssueChange object
 // This constructor will assign default values to properties that have it defined,
@@ -319,7 +322,36 @@ func (o IssueChange) MarshalJSON() ([]byte, error) {
 	if o.Message != nil {
 		toSerialize["message"] = o.Message
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *IssueChange) UnmarshalJSON(bytes []byte) (err error) {
+	varIssueChange := _IssueChange{}
+
+	if err = json.Unmarshal(bytes, &varIssueChange); err == nil {
+		*o = IssueChange(varIssueChange)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "created_on")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "issue")
+		delete(additionalProperties, "changes")
+		delete(additionalProperties, "message")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIssueChange struct {

@@ -19,7 +19,10 @@ import (
 type SearchSegment struct {
 	Text *string `json:"text,omitempty"`
 	Match *bool `json:"match,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchSegment SearchSegment
 
 // NewSearchSegment instantiates a new SearchSegment object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o SearchSegment) MarshalJSON() ([]byte, error) {
 	if o.Match != nil {
 		toSerialize["match"] = o.Match
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SearchSegment) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchSegment := _SearchSegment{}
+
+	if err = json.Unmarshal(bytes, &varSearchSegment); err == nil {
+		*o = SearchSegment(varSearchSegment)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "text")
+		delete(additionalProperties, "match")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchSegment struct {

@@ -19,7 +19,10 @@ import (
 type PipelineStepStateCompletedExpiredAllOf struct {
 	// The name of the result (EXPIRED)
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PipelineStepStateCompletedExpiredAllOf PipelineStepStateCompletedExpiredAllOf
 
 // NewPipelineStepStateCompletedExpiredAllOf instantiates a new PipelineStepStateCompletedExpiredAllOf object
 // This constructor will assign default values to properties that have it defined,
@@ -75,7 +78,29 @@ func (o PipelineStepStateCompletedExpiredAllOf) MarshalJSON() ([]byte, error) {
 	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *PipelineStepStateCompletedExpiredAllOf) UnmarshalJSON(bytes []byte) (err error) {
+	varPipelineStepStateCompletedExpiredAllOf := _PipelineStepStateCompletedExpiredAllOf{}
+
+	if err = json.Unmarshal(bytes, &varPipelineStepStateCompletedExpiredAllOf); err == nil {
+		*o = PipelineStepStateCompletedExpiredAllOf(varPipelineStepStateCompletedExpiredAllOf)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePipelineStepStateCompletedExpiredAllOf struct {

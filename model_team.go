@@ -13,12 +13,17 @@ package bitbucket
 
 import (
 	"encoding/json"
+	"reflect"
+	"strings"
 )
 
 // Team struct for Team
 type Team struct {
 	Account
+	AdditionalProperties map[string]interface{}
 }
+
+type _Team Team
 
 // NewTeam instantiates a new Team object
 // This constructor will assign default values to properties that have it defined,
@@ -47,7 +52,63 @@ func (o Team) MarshalJSON() ([]byte, error) {
 	if errAccount != nil {
 		return []byte{}, errAccount
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *Team) UnmarshalJSON(bytes []byte) (err error) {
+	type TeamWithoutEmbeddedStruct struct {
+	}
+
+	varTeamWithoutEmbeddedStruct := TeamWithoutEmbeddedStruct{}
+
+	err = json.Unmarshal(bytes, &varTeamWithoutEmbeddedStruct)
+	if err == nil {
+		varTeam := _Team{}
+		*o = Team(varTeam)
+	} else {
+		return err
+	}
+
+	varTeam := _Team{}
+
+	err = json.Unmarshal(bytes, &varTeam)
+	if err == nil {
+		o.Account = varTeam.Account
+	} else {
+		return err
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+
+		// remove fields from embedded structs
+		reflectAccount := reflect.ValueOf(o.Account)
+		for i := 0; i < reflectAccount.Type().NumField(); i++ {
+			t := reflectAccount.Type().Field(i)
+
+			if jsonTag := t.Tag.Get("json"); jsonTag != "" {
+				fieldName := ""
+				if commaIdx := strings.Index(jsonTag, ","); commaIdx > 0 {
+					fieldName = jsonTag[:commaIdx]
+				} else {
+					fieldName = jsonTag
+				}
+				if fieldName != "AdditionalProperties" {
+					delete(additionalProperties, fieldName)
+				}
+			}
+		}
+
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTeam struct {

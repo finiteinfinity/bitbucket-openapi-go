@@ -19,7 +19,10 @@ import (
 type SnippetCommit struct {
 	Links *SnippetCommitLinks `json:"links,omitempty"`
 	Snippet *Snippet `json:"snippet,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SnippetCommit SnippetCommit
 
 // NewSnippetCommit instantiates a new SnippetCommit object
 // This constructor will assign default values to properties that have it defined,
@@ -110,7 +113,30 @@ func (o SnippetCommit) MarshalJSON() ([]byte, error) {
 	if o.Snippet != nil {
 		toSerialize["snippet"] = o.Snippet
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return json.Marshal(toSerialize)
+}
+
+func (o *SnippetCommit) UnmarshalJSON(bytes []byte) (err error) {
+	varSnippetCommit := _SnippetCommit{}
+
+	if err = json.Unmarshal(bytes, &varSnippetCommit); err == nil {
+		*o = SnippetCommit(varSnippetCommit)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "links")
+		delete(additionalProperties, "snippet")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSnippetCommit struct {
